@@ -1,11 +1,15 @@
 
-function initMap() {
+function initMap(areadata,userdata,taxidata) {
+   console.log(userdata);
+   console.log(areadata);
+   console.log(taxidata);
    const map = new google.maps.Map(document.getElementById("map"), {
     zoom: 11,
     center: { lat: 17.480660, lng: 78.493740 },
     mapTypeId: "terrain",
   });
-  const rectangle = new google.maps.Rectangle({
+
+ const rectangle = new google.maps.Rectangle({
     strokeColor: "#FF0000",
     strokeOpacity: 0.8,
     strokeWeight: 2,
@@ -13,16 +17,17 @@ function initMap() {
     fillOpacity: 0.35,
     map,
     bounds: {
-      north: 17.4977725,
-      south: 17.4777725,
-      east: 78.503740,
-      west: 78.483740 ,
+      north: areadata[0]['southLat'],
+      south: areadata[0]['northLat'],
+      east: areadata[0]['eastLong'],
+      west: areadata[0]['westLong'] ,
     },
   });
 
   // use a Material Icon as font
+  for (let i=0; i<userdata.length; i++){
   new google.maps.Marker({
-    position: { lat: 17.49778334, lng: 78.483940 },
+    position: { lat: userdata[i][`latitude`], lng: userdata[i][`longitude`] },
     map,
     label: {
       text: "\ue530",
@@ -32,41 +37,23 @@ function initMap() {
     },
     title: "Material Icon Font Marker",
   });
-  new google.maps.Marker({
-    position: { lat: 17.48778334, lng: 78.493940 },
-    map,
-    label: {
-      text: "\ue530",
-      fontFamily: "Material Icons",
-      color: "#ffffff",
-      fontSize: "18px",
-    },
-    title: "Material Icon Font Marker",
-  });
-  new google.maps.Marker({
-    position: { lat: 17.48798334, lng: 78.493040 },
-    map,
-    label: {
-      text: "\ue530",
-      fontFamily: "Material Icons",
-      color: "#ffffff",
-      fontSize: "18px",
-    },
-    title: "Material Icon Font Marker",
-  });
-  plotTaxi(map,17.48909989,78.503040, 17.5091000,78.523040,"#0000ff");
-  plotTaxi(map,17.47909989,78.473040, 17.4991000,78.523040,"#00ff00");
-
+  }
+  for(let t=0;t<taxidata.length;t++){
+    console.log("Plotting for "+taxidata[t][`taxiName`])
+    plotTaxi(map,taxidata[t][`taxiName`],taxidata[t][`startLat`],taxidata[t][`startLong`],taxidata[t][`endLat`],taxidata[t][`endLong`],"#000000");
+  }
 }
 
-async function plotTaxi(map,startLat,startLang,endLat,endLang,colorCode){
+async function plotTaxi(map,taxiName,startLat,startLang,endLat,endLang,colorCode){
 for (let i = startLat ,j=startLang; i < endLat& j<endLang ; i=i+0.0001,j=j+0.0001){
 const taxiCoordinates = [
     { lat: i, lng: j },
     { lat: i+0.0001, lng: j+0.0001 },
-   // { lat: -18.142, lng: 178.431 },
- //   { lat: -27.467, lng: 153.027 },
   ];
+    $.ajax({
+        type: "POST",
+        url: "http://localhost:1112/settaxicoords/"+taxiName+"&"+i+"&"+j,
+    })
   const taxiPath = new google.maps.Polyline({
     path: taxiCoordinates,
     geodesic: true,
