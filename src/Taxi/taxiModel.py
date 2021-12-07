@@ -6,7 +6,7 @@ from bson.objectid import ObjectId
 
 # Taxi document contains reg no (String), brand (String), model (String), type (String) and currentLocation (GeoJSON)fields
 class TaxiModel:
-    TAXI_COLLECTION = 'taxis'
+    TAXI_COLLECTION = 'taxi_location'
 
     def __init__(self):
         self._db = Database()
@@ -47,3 +47,13 @@ class TaxiModel:
 
         taxi_obj_id = self._db.insert_single_data(TaxiModel.TAXI_COLLECTION, taxi_data)
         return self.find_by_object_id(taxi_obj_id)
+
+    def find_by_proximity(self, geospacial_location, proximity):
+        key = {'location':
+                   {'$geoWithin':
+                        {'$centerSphere': [geospacial_location['coordinates'], proximity / 6371]}}}
+        return self._db.get_multiple_data(TaxiModel.TAXI_COLLECTION, key)
+    def get_taxi_details(self ,reg_no):
+        reg_no = 'KL01AC0001'
+        key = {'taxi_reg_no':reg_no}
+        return self._db.get_single_data(TaxiModel.TAXI_COLLECTION, key)

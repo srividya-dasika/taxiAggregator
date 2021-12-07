@@ -1,11 +1,21 @@
 class Location:
 
-    def __init__(self,type,startLat,sartLong,endLat=0,endLong=0):
+    def __init__(self,type,startLat,startLong,endLat=0,endLong=0):
         self.type = type
         self.startLat = startLat
-        self.startLong = sartLong
+        self.startLong = startLong
         self.endLad = endLat
         self.endLong = endLong
+
+    @property
+    def current_loc(self):
+        loc = [self.startLong, self.startLat]
+        #Note:  Mongodb expects coord with longitude first and then latitude
+        self._current_loc = {
+                        'type': "Point",
+                        'coordinates': loc
+                    }
+        return self._current_loc
 
 
 

@@ -6,10 +6,10 @@ from src.Users.userActions import Users
 from src.Location.locationService import Location
 
 if __name__ == "__main__":
-    user1Location = Location("POINT",10.12,10.15)
-    user1 = Users("user1",user1Location)
-    user2 = Users("user2",user1Location)
-    user3 = Users("user3",user1Location)
+    user1Location = Location("Point",17.2279, 79.00512)
+    user1 = Users("user1",user1Location.current_loc)
+    user2 = Users("user2",user1Location.current_loc)
+    user3 = Users("user3",user1Location.current_loc)
 
     user1.requestTaxi()
 
