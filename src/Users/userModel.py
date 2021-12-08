@@ -50,7 +50,7 @@ class UserModel:
         if user_document != -1:
             self._latest_error = f'Username {username} already exists'
             return -1
-        currentCoordinates = {'type': "Point", 'coordinates': [currentLat, currentLong]}
+        currentCoordinates = {'type': "Point", 'coordinates': [currentLong, currentLat]}
         user_data = {
             'username': username,
             'email': email,

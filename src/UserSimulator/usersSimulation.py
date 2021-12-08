@@ -11,11 +11,11 @@ if __name__ == "__main__":
     user2 = Users("user2",user1Location.current_loc)
     user3 = Users("user3",user1Location.current_loc)
 
-    user1.requestTaxi()
+    user1.requestTaxi('All')
 
     # creating thread
-    t1 = threading.Thread(target=user2.requestTaxi(), args=())
-    t2 = threading.Thread(target=user3.requestTaxi(), args=())
+    t1 = threading.Thread(target=user2.requestTaxi('Luxury'), args=())
+    t2 = threading.Thread(target=user3.requestTaxi('Deluxe'), args=())
 
     # starting thread 1
     t1.start()

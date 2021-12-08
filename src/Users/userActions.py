@@ -11,13 +11,13 @@ class Users:
     def add_new_user(self,username,location): #Adding new user into DB.
         return 1
 
-    def requestTaxi(self):
+    def requestTaxi(self, type):
         #  Send request to book a taxi to the taxi service.
         #  Wait till a taxi is allotted.
         #  Then change user status to riding
         print(self.username," requested for taxi...")
         taxis = Taxi()
-        nearbyTaxis = taxis.getNearestTaxis(self.username,self.location)
+        nearbyTaxis = taxis.getNearestTaxis(self.username,self.location, type)
 #        if self.checkDriverAvailability(nearbyTaxis[0]):
  #           taxis.updateTaxiStatus(nearbyTaxis[0].reg_no,"Occupied")
 
