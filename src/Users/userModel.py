@@ -45,12 +45,13 @@ class UserModel:
     # This first checks if a user already exists with that username. If it does, it populates latest_error and returns -1
     # If a user doesn't already exist, it'll insert a new document and return the same to the caller
     def insertNewUser(self, username, email, joinedDate, gender, phoneNo, city, currentLat, currentLong):
+        print("Inserting New User - "+username)
         self._latest_error = ''
         user_document = self.find_by_username(username)
         if user_document != -1:
             self._latest_error = f'Username {username} already exists'
             return -1
-        currentCoordinates = {'type': "Point", 'coordinates': [currentLat, currentLong]}
+        currentCoordinates = {'type': "Point", 'coordinates': [currentLong, currentLat ]}
         user_data = {
             'username': username,
             'email': email,

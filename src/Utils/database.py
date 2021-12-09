@@ -39,5 +39,26 @@ class Database:
         documents = db_collection.find(key)
         return documents
 
+    def upsertData(self,collection,filter,record):
+        db_collection = self._db[collection]
+        documents = db_collection.replace_one(filter,record,upsert=True)
+
+    def insert_many(self, collection, obj):
+        db_collection = self._db[collection]
+        document = db_collection.insert_many(obj)
+        return
+
+    def delete_many(self, collection):
+        db_collection = self._db[collection]
+        document = db_collection.delete_many({})
+        return
+
+    # This method finds multple documents based on the key provided
+    def get_multiple_data(self, collection, key):
+        db_collection = self._db[collection]
+        documents = db_collection.find(key)
+        print("get mulitple data")
+        return documents
+
     
     
