@@ -2,7 +2,7 @@ from flask_cors import CORS
 from flask import Flask, jsonify, request
 
 from Location.locationService import Location
-from Taxi.taxiActions import Taxi
+from Taxi.taxiModel import Taxi
 from src.Taxi.taxiModel import TaxiModel
 
 app = Flask(__name__)
