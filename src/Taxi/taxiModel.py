@@ -19,6 +19,7 @@ class TaxiModel:
 
     # Since taxi reg no should be unique in taxis collection, this provides a way to fetch the taxi document based on the taxi reg no
     def find_taxi_by_reg_no(self, reg_no):
+        print("querying for taxi - "+reg_no)
         key = {'reg_no': reg_no}
         return self.__find(key)
 
@@ -47,3 +48,34 @@ class TaxiModel:
 
         taxi_obj_id = self._db.insert_single_data(TaxiModel.TAXI_COLLECTION, taxi_data)
         return self.find_by_object_id(taxi_obj_id)
+
+    def upsertTaxiCoords(self,reg_no,lat,long):
+        print("Upserting Taxi Coords")
+        filter = {'reg_no':reg_no}
+        currentCoordinates = {'type': "Point", 'coordinates': [lat, long]}
+        record = {'reg_no': reg_no, 'currentCoordinates': currentCoordinates}
+        self._db.upsertData(TaxiModel.TAXI_COLLECTION,filter,record)
+
+        # Find taxis by proximity and taxi type but limit the number of search results returned to the user
+
+    def find_by_proximity(self, geospacial_location, proximity, search_limit, taxi_type='All'):
+        if taxi_type != 'All':
+            key = {'$and': [{'location':
+                                 {'$geoWithin':
+                                      {'$centerSphere': [geospacial_location['coordinates'], proximity / 6371]}}}
+                , {'taxi_type': taxi_type}]}
+        else:
+            key = {'location':
+                       {'$geoWithin':
+                            {'$centerSphere': [geospacial_location['coordinates'], proximity / 6371]}}}
+
+        return self._db.get_multiple_data(TaxiModel.TAXI_COLLECTION, key).limit(search_limit)
+
+    def get_taxi_details(self, reg_no):
+        key = {'reg_no': reg_no}
+        return self._db.get_single_data(TaxiModel.TAXI_COLLECTION, key)
+
+    def update_one(self, reg_no, status):
+        search_key = {'reg_no': reg_no}
+        update_key = {"$set": {'status': status}}
+        return self._db.update_one(search_key, update_key)
