@@ -7,6 +7,8 @@ class Taxi:
         self.reg_no = reg_no
         #self.location = location
         self.taxi_model = TaxiModel()
+    def init_model(self, city):
+
 
     def add_new_taxi(self,taxi_reg_no,location): #Adding new user into DB.
         return 1
