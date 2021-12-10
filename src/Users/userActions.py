@@ -15,6 +15,7 @@ class Users:
         #  Send request to book a taxi to the taxi service.
         #  Wait till a taxi is allotted.
         #  Then change user status to riding
+        print('\n\n\n')
         print(self.username," requested for taxi...")
         taxis = Taxi()
         nearbyTaxis = taxis.getNearestTaxis(self.username,self.location, type)

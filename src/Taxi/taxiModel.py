@@ -49,7 +49,7 @@ class TaxiModel:
         return self.find_by_object_id(taxi_obj_id)
 
     # Find taxis by proximity and taxi type but limit the number of search results returned to the user
-    def find_by_proximity(self, geospacial_location, proximity, search_limit, taxi_type ='All'):
+    def find_by_proximity(self, collection, geospacial_location, proximity, search_limit, taxi_type ='All'):
         if taxi_type != 'All':
             key = {'$and': [{'location':
                    {'$geoWithin':
@@ -60,8 +60,7 @@ class TaxiModel:
                    {'$geoWithin':
                         {'$centerSphere': [geospacial_location['coordinates'], proximity / 6371]}}}
 
-
-        return self._db.get_multiple_data(TaxiModel.TAXI_COLLECTION, key).limit(search_limit)
+        return self._db.get_multiple_data(collection, key, search_limit)
 
     def get_taxi_details(self ,reg_no):
         key = {'reg_no':reg_no}

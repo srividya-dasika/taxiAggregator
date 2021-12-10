@@ -20,6 +20,7 @@ class Database:
     def get_single_data(self, collection, key):
         db_collection = self._db[collection]
         document = db_collection.find_one(key)
+        #document =db_collection.find()
         return document
 
     def get_single_data_with_filter(self, collection, key, filter):
@@ -54,8 +55,6 @@ class Database:
         return
 
     # This method finds multple documents based on the key provided
-    def get_multiple_data(self, collection, key):
+    def get_multiple_data(self, collection, key, search_limit):
         db_collection = self._db[collection]
-        documents = db_collection.find(key)
-        print("get mulitple data")
-        return documents
+        return db_collection.find(key).limit(search_limit)
