@@ -3,14 +3,18 @@ from pymongo import MongoClient
 
 
 class Database:
-    HOST = '127.0.0.1'
-    PORT = '27017'
-    DB_NAME = 'TaxiApp_DB'
+    #HOST = '127.0.0.1'
+    #PORT = '27017'
+    DB_NAME = 'Taxi_Aggregator_DB'
 
     def __init__(self):
-        self._db_conn = MongoClient(f'mongodb://{Database.HOST}:{Database.PORT}')
+        #self._db_conn = MongoClient(f'mongodb://{Database.HOST}:{Database.PORT}')
+        #self._db = self._db_conn[Database.DB_NAME]
+
+        self._db_conn = MongoClient(
+            "mongodb+srv://test:test@cluster0.5dwwl.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
         self._db = self._db_conn[Database.DB_NAME]
-    
+
     # This method finds a single document using field information provided in the key parameter
     # It assumes that the key returns a unique document. It returns None if no document is found
     def get_single_data(self, collection, key):
@@ -39,6 +43,7 @@ class Database:
         documents = db_collection.find(key)
         return documents
 
+
     def upsertData(self,collection,filter,record):
         db_collection = self._db[collection]
         documents = db_collection.replace_one(filter,record,upsert=True)
@@ -54,11 +59,8 @@ class Database:
         return
 
     # This method finds multple documents based on the key provided
-    def get_multiple_data(self, collection, key):
-        db_collection = self._db[collection]
-        documents = db_collection.find(key)
-        print("get mulitple data")
-        return documents
 
-    
-    
+    def get_multiple_data(self, collection, key, search_limit):
+        db_collection = self._db[collection]
+        return db_collection.find(key).limit(search_limit)
+

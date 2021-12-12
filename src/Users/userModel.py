@@ -51,7 +51,9 @@ class UserModel:
         if user_document != -1:
             self._latest_error = f'Username {username} already exists'
             return -1
-        currentCoordinates = {'type': "Point", 'coordinates': [currentLong, currentLat ]}
+
+        currentCoordinates = {'type': "Point", 'coordinates': [currentLong, currentLat]}
+
         user_data = {
             'username': username,
             'email': email,
@@ -59,7 +61,7 @@ class UserModel:
             'gender': gender,
             'phoneNo': phoneNo,
             'city': city,
-            'currentCoordinates': currentCoordinates
+            'location': currentCoordinates
         }
         user_obj_id = self._db.insert_single_data(UserModel.USER_COLLECTION, user_data)
         return self.find_by_object_id(user_obj_id)
