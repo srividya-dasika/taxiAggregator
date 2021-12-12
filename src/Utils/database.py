@@ -44,6 +44,11 @@ class Database:
         documents = db_collection.find(key)
         return documents
 
+
+    def upsertData(self,collection,filter,record):
+        db_collection = self._db[collection]
+        documents = db_collection.replace_one(filter,record,upsert=True)
+
     def insert_many(self, collection, obj):
         db_collection = self._db[collection]
         document = db_collection.insert_many(obj)
@@ -55,6 +60,8 @@ class Database:
         return
 
     # This method finds multple documents based on the key provided
+
     def get_multiple_data(self, collection, key, search_limit):
         db_collection = self._db[collection]
         return db_collection.find(key).limit(search_limit)
+

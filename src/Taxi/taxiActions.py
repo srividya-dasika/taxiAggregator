@@ -22,7 +22,7 @@ class Taxi:
         #  Send request to book a taxi to the taxi service.
         #  Wait till a taxi is allotted.
         #  Then change user status to riding
-        print("Fetching taxis nearby ",username)
+        print("Fetching taxis nearby for ",username)
         #try:
         obj_serv = ServiceArea()
         within_service_area = obj_serv.validate_service_area(userLocation)

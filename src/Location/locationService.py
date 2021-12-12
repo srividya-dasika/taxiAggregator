@@ -1,5 +1,6 @@
 class Location:
 
+
     def __init__(self,type,city,startLat,startLong,endLat=0,endLong=0):
         self.type = type
         self.startLat = startLat
@@ -18,6 +19,7 @@ class Location:
                         'city': self.city
                     }
         return self._current_loc
+
 
 
 
