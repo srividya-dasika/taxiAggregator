@@ -20,7 +20,6 @@ class Database:
     def get_single_data(self, collection, key):
         db_collection = self._db[collection]
         document = db_collection.find_one(key)
-        #document =db_collection.find()
         return document
 
     def get_single_data_with_filter(self, collection, key, filter):

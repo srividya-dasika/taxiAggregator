@@ -8,11 +8,12 @@ from src.Location.locationService import Location
 class UserSimulation:
 
     def simulateSingleUserRequest(self):
-        user1Location = Location("Point", "Hyderabad", 17.2279, 78.486956)
+        user1Location = Location("Point", "Hyderabad", 17.387051, 78.486956)
         user1 = Users("user1", user1Location.current_loc)
         user1.requestTaxi('All')
 
     def simulateMultiUserRequest(self):
+        # Out of service area
         user1Location = Location("Point", "Hyderabad", 17.2279, 78.486956)
         user1 = Users("user1", user1Location.current_loc)
 
@@ -30,7 +31,7 @@ class UserSimulation:
         # creating thread
         t1 = threading.Thread(target=user2.requestTaxi('Luxury'), args=())
         t2 = threading.Thread(target=user3.requestTaxi('Deluxe'), args=())
-        t3 = threading.Thread(target=user4.requestTaxi('Deluxe'), args=())
+        t3 = threading.Thread(target=user4.requestTaxi('All'), args=())
 
         # starting thread 1
         t1.start()

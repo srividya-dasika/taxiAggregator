@@ -10,11 +10,6 @@ class Taxi:
         #self.location = location
         self.taxi_model = TaxiModel()
 
-    def city_db (self, userLocation):
-        self._db_collection = CollectionMapper(userLocation['city'])
-        self._city_db = self._db_collection.get_collection_name
-        return self._city_db
-
     def add_new_taxi(self,taxi_reg_no,location): #Adding new user into DB.
         return 1
 
@@ -30,7 +25,7 @@ class Taxi:
         if within_service_area:
 
             #Mongoquery to get all nearby taxis.
-            taxi_list = self.taxi_model.find_by_proximity( self.city_db(userLocation), userLocation, self.proximityRadius, self.searchResultLimit, taxi_type)
+            taxi_list = self.taxi_model.find_by_proximity( userLocation, self.proximityRadius, self.searchResultLimit, taxi_type)
             #print((taxi_list))
             if len(list(taxi_list.clone())) == 0:
                 print(f'No taxis found in {self.proximityRadius} km radius')

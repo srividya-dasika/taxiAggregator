@@ -12,13 +12,13 @@ class CollectionMapper:
     def get_collection_name(self):
 
         if self.city == 'Hyderabad':
-            self._db_collection = 'taxi_location'
+            self._db_collection = 'service_area_hyd'
             print(self._db_collection )
         elif self.city == 'Thiruvananthapuram':
-            self._db_collection = 'service_location_tvm'
+            self._db_collection = 'service_area_tvm'
             print(self._db_collection)
         elif self.city == 'Pune City':
-            self._db_collection = 'service_location_pune'
+            self._db_collection = 'service_area_pune'
         else:
             print("oops ")
             return
