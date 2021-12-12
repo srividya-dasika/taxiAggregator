@@ -41,7 +41,7 @@ class TaxiModel:
         if (taxis_document):
             self._latest_error = f'Taxi with Regd No-  {reg_no} already exists'
             return -1
-        currentCoordinates = {'type': "Point", 'coordinates': [lat, long]}
+        currentCoordinates = {'type': "Point", 'coordinates': [long, lat]}
         taxi_data = {'reg_no': reg_no, 'brand': brand, 'model': model, 'type': type, 'base_rate': base_rate,
                      'vacant': vacant, 'currentCoordinates': currentCoordinates}
 

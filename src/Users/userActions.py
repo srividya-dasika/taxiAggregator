@@ -9,6 +9,7 @@ class Users:
         return 1
 
     def add_new_user(self,username,location): #Adding new user into DB.
+        
         return 1
 
     def requestTaxi(self, type):
