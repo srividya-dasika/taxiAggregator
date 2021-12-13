@@ -1,29 +1,43 @@
 from flask_cors import CORS
-from flask import Flask, jsonify, request
+from flask import Flask, request
 
-from Location.locationService import Location
-from Taxi.taxiModel import Taxi
-from src.Taxi.taxiModel import TaxiModel
+from locationService import Location
+from taxiModel import Taxi
 
 app = Flask(__name__)
 CORS(app)
-@app.route('/requestTaxi', methods = ['GET'])
+@app.route('/requestTaxi', methods = ['GET','POST'])
 def requestTaxi():
     #user1Location = Location("POINT", 10.12, 10.15)
     #user1 = Users("user1", user1Location.current_loc)
     #user1.requestTaxi('All')
     taxis = Taxi()
-    userLocation = Location("Point", 17.2279, 79.00512)
-    taxi_list = taxis.getNearestTaxis("user1",userLocation.current_loc,"Luxury")
-    for taxi in taxi_list:
-        print(taxi.reg_no)
-    return "list of taxis - "
+    content_type = request.headers.get('Content-Type')
+    if content_type == 'application/json':
+        taxi_request_dict = request.json
+        userLocation = Location("Point", taxi_request_dict['location'],taxi_request_dict['currentLat'], taxi_request_dict['currentLong'])
+        taxi_list = taxis.getNearestTaxis(taxi_request_dict['userName'],userLocation.current_loc,taxi_request_dict['taxiType'])
+        for taxi in taxi_list:
+            print(taxi.reg_no)
+        return "List of Taxis.."
+    else :
+        return 'Content-Type not supported!'
 
 
 @app.route('/selectTaxi', methods=['POST', 'GET'])
 def selectTaxi():
-    taxi = Taxi()
-    taxi.updateTaxiStatus("","")
+    content_type = request.headers.get('Content-Type')
+    if content_type == 'application/json':
+        selected_taxi_dict = request.json
+        taxi = Taxi()
+        taxi.updateTaxidStatus(selected_taxi_dict['taxiRegNo'],"occupied")
+        return "Trip started!"
+    else:
+        return 'Content-Type not supported!'
+
+@app.route('/getTaxiCoords', methods=['POST', 'GET'])
+def getTaxiCoords():
+    return
 
 if __name__ == '__main__':
     app.run(host = 'localhost', debug = True, port = 1113)

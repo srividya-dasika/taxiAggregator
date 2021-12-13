@@ -3,18 +3,16 @@ from pymongo import MongoClient
 
 
 class Database:
-    #HOST = '127.0.0.1'
-    #PORT = '27017'
-    DB_NAME = 'Taxi_Aggregator_DB'
+    HOST = '3.83.64.98'
+    PORT = '27017'
+    DB_NAME = 'TaxiApp_DB'
 
     def __init__(self):
-        #self._db_conn = MongoClient(f'mongodb://{Database.HOST}:{Database.PORT}')
-        #self._db = self._db_conn[Database.DB_NAME]
+       # uri = "mongodb://user:password@example.com/?authSource=the_database&authMechanism=SCRAM-SHA-1"
 
-        self._db_conn = MongoClient(
-            "mongodb+srv://test:test@cluster0.5dwwl.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
+        self._db_conn = MongoClient(f'mongodb://taxiAppUser:Test1234@{Database.HOST}:{Database.PORT}/?authSource={Database.DB_NAME}&authMechanism=SCRAM-SHA-1')
         self._db = self._db_conn[Database.DB_NAME]
-
+    
     # This method finds a single document using field information provided in the key parameter
     # It assumes that the key returns a unique document. It returns None if no document is found
     def get_single_data(self, collection, key):
@@ -42,7 +40,6 @@ class Database:
         db_collection = self._db[collection]
         documents = db_collection.find(key)
         return documents
-
 
     def upsertData(self,collection,filter,record):
         db_collection = self._db[collection]

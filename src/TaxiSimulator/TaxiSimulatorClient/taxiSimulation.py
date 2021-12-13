@@ -2,7 +2,7 @@ import time
 
 import pandas as pd
 import threading
-from src.Taxi.taxiModel import TaxiModel
+from taxiModel import TaxiModel
 
 class TaxiSimulator:
 
@@ -65,5 +65,3 @@ class TaxiSimulator:
             i=i+1
            # taxiModel.upsertTaxiCoords(taxiDetails.split('&')[0], taxiDetails.split('&')[1], taxiDetails.split('&')[2])
 
-obj = TaxiSimulator()
-obj.setInitialTaxiCoords('taxi_reg_hyd.csv')

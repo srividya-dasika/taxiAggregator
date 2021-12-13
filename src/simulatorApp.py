@@ -1,11 +1,6 @@
 from flask_cors import CORS
-from flask import Flask, jsonify, request
-from src.Taxi.taxiModel import *
-from src.Users.userModel import *
-from src.Drivers.driverModel import *
+from flask import Flask
 from src.TaxiSimulator.TaxiSimulatorClient.taxiSimulation import TaxiSimulator
-from src.UserSimulator.usersSimulation import UserSimulation
-
 
 app = Flask(__name__)
 CORS(app)

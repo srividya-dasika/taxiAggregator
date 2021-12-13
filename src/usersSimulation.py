@@ -2,8 +2,8 @@
 # 1. Single requests from single user
 # 2. Parallel requests from 3 users.
 import threading
-from src.Users.userActions import Users
-from src.Location.locationService import Location
+from userModel import Users
+from locationService import Location
 
 class UserSimulation:
 

@@ -1,9 +1,8 @@
-from src.Taxi.taxiModel import *
-from src.Users.userModel import *
-from src.Drivers.driverModel import *
-from src.TaxiSimulator.TaxiSimulatorServer import *
+from taxiModel import *
+from userModel import *
+from driverModel import *
 from src.TaxiSimulator.TaxiSimulatorClient.taxiSimulation import TaxiSimulator
-from src.UserSimulator.usersSimulation import UserSimulation
+from usersSimulation import UserSimulation
 
 user_coll = UserModel()
 taxi_coll = TaxiModel()

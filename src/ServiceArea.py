@@ -1,4 +1,4 @@
-from src.Utils.database import Database
+from database import Database
 
 class ServiceArea:
     collection = 'service_area'

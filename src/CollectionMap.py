@@ -1,4 +1,4 @@
-from src.Utils.database import Database
+from database import Database
 
 
 
@@ -20,7 +20,7 @@ class CollectionMapper:
         elif self.city == 'Pune City':
             self._db_collection = 'service_area_pune'
         else:
-            print("oops ")
+            print("Service Area not Served currently! ")
             return
 
         return self._db_collection
