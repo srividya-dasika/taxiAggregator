@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simple Polylines with Markers with SVG and Fonts</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" type="text/css" href="./index.css" />
+    <script src="./index.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyALExOwobpy5AJ1jVr2XKGDmvygCxACHtU"></script>
+  </head>
+  <body>
+    <div id="map"></div>
+
+    <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
+    <!--script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyALExOwobpy5AJ1jVr2XKGDmvygCxACHtU&callback=initMap&v=weekly"
+      async
+    ></script--!>
+   <script>
+    $.ajax({
+        type: `GET`,
+        url: `http://localhost:1112/areabounds`,
+        success: function(areadata) {
+            $.ajax({
+                  type: `GET`,
+                  url: `http://localhost:1112/userlocations`,
+                  success: function(userdata) {
+                     $.ajax({
+                             type: `GET`,
+                             url: `http://localhost:1112/gettaxiroutes`,
+                             success: function(taxidata) {
+                             initMap(areadata, userdata, taxidata);
+                             }
+                      });
+                  }
+           });
+        }
+    });
+  </script>
+  </body>
+</html>

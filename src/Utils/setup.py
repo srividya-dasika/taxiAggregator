@@ -1,4 +1,4 @@
-import random
+fimport random
 # Imports MongoClient for base level access to the local MongoDB
 from pymongo import MongoClient
 # Imports datetime class to create timestamp for weather data storage

@@ -1,17 +1,18 @@
 from src.Location.locationService import Location
 from src.Utils.database import Database
+from src.Utils.CollectionMap import CollectionMapper
 import random
 import csv
 
 class TaxiRegistration:
-    NUMBER_OF_USERS = 300
+    NUMBER_OF_USERS = 30
 
 
     #def __init__(self):
 
     taxi_data = []
-    def generate_taxi_details(self):
-        with open('../TaxiSimulator/TaxiSimulatorClient/taxi_reg_pune.csv', 'w', newline='') as csvfile:
+    def generate_taxi_details(self, loc_name):
+        with open('../TaxiSimulator/TaxiSimulatorClient/taxi_reg_tvm.csv', 'w', newline='') as csvfile:
             taxi_brand = {'Luxury': ['Audi, BMW', 'Jaguar', 'Mercedes'],
                           'Deluxe': ['Ecosport', 'skoda', 'Ciaz'],
                           'Basic': ['Zen', 'Tiago', 'Sonet']
@@ -23,8 +24,7 @@ class TaxiRegistration:
 
             writer_handle = csv.writer(csvfile)
             for i in range(1, TaxiRegistration.NUMBER_OF_USERS):
-
-                loc_name = random.choice(['Pune City', 'Hyderabad', 'Thiruvananthapuram'])
+                #loc_name = random.choice(['Pune City', 'Hyderabad', 'Thiruvananthapuram'])
                 rand_lat_seed = geo_center[loc_name][0] - 0.3
                 rand_lon_seed = geo_center[loc_name][1] - 0.3
 
@@ -55,10 +55,12 @@ class TaxiRegistration:
             writer_handle.writerow(self.taxi_data)
         db = Database()
         print(type(self.taxi_data))
-        db.insert_many('service_area_pune',self.taxi_data)
+        obj = CollectionMapper(loc_name)
+        collection =obj.get_collection_name
+        db.insert_many(collection,self.taxi_data)
         return taxi_info
 
 obj = TaxiRegistration()
-obj.generate_taxi_details()
+obj.generate_taxi_details('Thiruvananthapuram')
 
 
