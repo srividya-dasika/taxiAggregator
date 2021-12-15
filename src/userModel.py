@@ -1,6 +1,8 @@
 from database import Database
 # Imports ObjectId to convert to the correct format before querying in the db
 from bson.objectid import ObjectId
+from pymongo import GEOSPHERE
+from bson.son import SON
 from taxiModel import Taxi
 
 
@@ -66,6 +68,11 @@ class UserModel:
         }
         user_obj_id = self._db.insert_single_data(UserModel.USER_COLLECTION, user_data)
         return self.find_by_object_id(user_obj_id)
+
+    def get_nearby_users(self,geospacial_location, proximity, search_limit):
+            collection = self.USER_COLLECTION
+            range_query = {'currentCoordinates': SON([("$near", geospacial_location), ("$maxDistance", proximity)])}
+            return self._db.get_multiple_data(collection, range_query, search_limit)
 
 class Users:
     def __init__(self, username,userLocation):

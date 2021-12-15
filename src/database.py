@@ -1,9 +1,9 @@
 # Imports MongoClient for base level access to the local MongoDB
-from pymongo import MongoClient
+from pymongo import MongoClient, GEOSPHERE
 
 
 class Database:
-    HOST = '3.83.64.98'
+    HOST = '54.165.227.98'
     PORT = '27017'
     DB_NAME = 'TaxiApp_DB'
 
@@ -12,7 +12,8 @@ class Database:
 
         self._db_conn = MongoClient(f'mongodb://taxiAppUser:Test1234@{Database.HOST}:{Database.PORT}/?authSource={Database.DB_NAME}&authMechanism=SCRAM-SHA-1')
         self._db = self._db_conn[Database.DB_NAME]
-    
+
+
     # This method finds a single document using field information provided in the key parameter
     # It assumes that the key returns a unique document. It returns None if no document is found
     def get_single_data(self, collection, key):
@@ -41,9 +42,9 @@ class Database:
         documents = db_collection.find(key)
         return documents
 
-    def upsertData(self,collection,filter,record):
+    def upsertData(self,collection,filter,key):
         db_collection = self._db[collection]
-        documents = db_collection.replace_one(filter,record,upsert=True)
+        documents = db_collection.update_one(filter,key,upsert=False)
 
     def insert_many(self, collection, obj):
         db_collection = self._db[collection]
@@ -59,5 +60,13 @@ class Database:
 
     def get_multiple_data(self, collection, key, search_limit):
         db_collection = self._db[collection]
+        print(f'creating index on {collection}')
+        db_collection.create_index([('currentCoordinates', GEOSPHERE)])
+        print(f'querying for {key} with limit {search_limit}')
+        records = db_collection.find(key).limit(search_limit)
+        i=0
+        for record in records:
+            i=i+1
+        print(f'Count of records received = {i}')
         return db_collection.find(key).limit(search_limit)
 

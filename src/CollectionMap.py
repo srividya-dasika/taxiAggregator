@@ -3,7 +3,6 @@ from database import Database
 
 
 class CollectionMapper:
-    SERVICE_AREA_COLLECTION = 'service_area'
     def __init__(self, city):
         self.city = city
 
@@ -12,15 +11,16 @@ class CollectionMapper:
     def get_collection_name(self):
 
         if self.city == 'Hyderabad':
-            self._db_collection = 'service_area_hyd'
-            print(self._db_collection )
+            self._db_collection = 'taxi_area_hyd'
+            print(f'fetching data from {self._db_collection} collection')
         elif self.city == 'Thiruvananthapuram':
-            self._db_collection = 'service_area_tvm'
-            print(self._db_collection)
+            self._db_collection = 'taxi_area_tvm'
+            print(f'fetching data from {self._db_collection} collection')
         elif self.city == 'Pune City':
-            self._db_collection = 'service_area_pune'
+            self._db_collection = 'taxi_area_pune'
+            print(f'fetching data from {self._db_collection} collection')
         else:
-            print("Service Area not Served currently! ")
+            print(f'Service Area {self.city} not Served currently! ')
             return
 
         return self._db_collection
