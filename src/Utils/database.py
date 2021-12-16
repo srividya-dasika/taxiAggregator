@@ -46,7 +46,9 @@ class Database:
 
     def upsertData(self,collection,filter,record):
         db_collection = self._db[collection]
+
         documents = db_collection.replace_one(filter,record,upsert=True)
+        print (documents)
 
     def insert_many(self, collection, obj):
         db_collection = self._db[collection]

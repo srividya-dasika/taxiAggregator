@@ -61,6 +61,6 @@ class TaxiRegistration:
         return taxi_info
 
 obj = TaxiRegistration()
-obj.generate_taxi_details('Thiruvananthapuram')
+obj.generate_taxi_details('Pune City')
 
 

@@ -2,9 +2,24 @@ from src.Utils.database import Database
 
 class ServiceArea:
     collection = 'service_area'
+
     def __init__(self):
         self._db = Database()
         self._latest_error = ''
+
+    def is_service_area_defined(self, city):
+        key = { "features.properties.name": city}
+
+        ret = self._db.get_single_data(self.collection, key)
+        if ret:
+            print(f'Service area is defined for {city}')
+            return True
+        else:
+            print(f'Service area is not yet defined')
+            return False
+
+    def create_service_area(self, service_area_def_file):
+        return self._db.insert_single_data(self.collection, service_area_def_file)
 
     def find_service_area(self, usrlocation):
         self.long, self.lat = usrlocation['coordinates']

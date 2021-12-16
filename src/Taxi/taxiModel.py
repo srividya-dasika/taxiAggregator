@@ -46,7 +46,7 @@ class TaxiModel:
     def insertNewTaxi(self, reg_no, brand, model, type, base_rate,  vacant, lat,long, city):
         self._latest_error = ''
         print("Inserting data for New Taxi with reg_no - "+reg_no+" to Taxis Collection....")
-        taxis_document = self.find_taxi_by_reg_no(reg_no)
+        taxis_document = self.find_taxi_by_reg_no(city,reg_no)
 
         if (taxis_document != None):
             print(f'Taxi with Regd No-  {reg_no} already exists')
@@ -61,7 +61,7 @@ class TaxiModel:
         taxi_obj_id = self._db.insert_single_data(collection, taxi_data)
 
         print(f'Inserted the taxi to the {collection} collection')
-        return self.find_by_object_id(collection, taxi_obj_id)
+        return #self.find_by_object_id(collection, taxi_obj_id)
 
     # Find taxis by proximity and taxi type but limit the number of search results returned to the user
     def find_by_proximity(self, geospacial_location, proximity, search_limit, taxi_type ='All'):
@@ -97,8 +97,17 @@ class TaxiModel:
         key = {'taxi_reg_no': reg_no}
         return self._db.get_single_data(collection, key)
 
+
+    def update_one(self, city, taxi_reg_no, taxi_coord, user_coord ,status):
+        collection = self.__get_taxi_collection(city)
+        search_key = {'taxi_reg_no': taxi_reg_no}
+        update_key = {'vacant': status}
+        return self._db.upsertData(collection, search_key, update_key, False)
+
+    '''
     def update_one(self, reg_no, status, city):
         collection = self.__get_taxi_collection(city)
         search_key = {'taxi_reg_no': reg_no}
         update_key = {"$set": {'status': status}}
         return self._db.upsertData(collection, search_key, update_key)
+    '''

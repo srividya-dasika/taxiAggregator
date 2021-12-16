@@ -4,6 +4,8 @@
 import threading
 from src.Users.userActions import Users
 from src.Location.locationService import Location
+import time
+import random
 
 class UserSimulation:
 
@@ -12,8 +14,34 @@ class UserSimulation:
         user1 = Users("user1", user1Location.current_loc)
         user1.requestTaxi('All')
 
+    def simulateBookTaxi(self, user, taxi_type):
+
+        taxi_list  = user.requestTaxi(taxi_type)
+
+        returned_list =[]
+        if len(list(taxi_list.clone())) == 0:
+            print(f'No taxis found in proximity')
+            return
+        for taxi in taxi_list:
+            returned_list.append(taxi)
+            print(f'Taxi available :  {taxi}')
+
+        selected_Taxi = returned_list[0]
+        print('\nUser request for ',selected_Taxi)
+        user_location = user.get_user_location()
+
+        city = selected_Taxi['location_name']
+        taxi_reg_no = selected_Taxi['taxi_reg_no']
+        taxi_coord = selected_Taxi['location']
+        user_coord = user.get_user_location
+
+        # First move to user location
+        user.confirmTaxiBooking( city, taxi_reg_no, taxi_coord, user_coord)
+
+
     def simulateMultiUserRequest(self):
         # Out of service area
+
         user1Location = Location("Point", "Hyderabad", 17.2279, 78.486956)
         user1 = Users("user1", user1Location.current_loc)
 
@@ -29,9 +57,10 @@ class UserSimulation:
         user1.requestTaxi('All')
 
         # creating thread
-        t1 = threading.Thread(target=user2.requestTaxi('Luxury'), args=())
-        t2 = threading.Thread(target=user3.requestTaxi('Deluxe'), args=())
-        t3 = threading.Thread(target=user4.requestTaxi('All'), args=())
+        #t1 = threading.Thread(target=user2.requestTaxi('Luxury'), args=())
+        t1 = threading.Thread(target=self.simulateBookTaxi(user2, 'Luxury'), args=())
+        t2 = threading.Thread(target=self.simulateBookTaxi(user3,'All'), args=())
+        t3 = threading.Thread(target=self.simulateBookTaxi(user4, 'All'), args=())
 
         # starting thread 1
         t1.start()
