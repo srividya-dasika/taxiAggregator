@@ -11,6 +11,7 @@
     <link rel="stylesheet" type="text/css" href="./index.css" />
     <script src="./index.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyALExOwobpy5AJ1jVr2XKGDmvygCxACHtU"></script>
+    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
   </head>
   <body>
     <div id="map"></div>
@@ -25,21 +26,11 @@
         type: `GET`,
         url: `http://localhost:1112/areabounds`,
         success: function(areadata) {
-            $.ajax({
-                  type: `GET`,
-                  url: `http://localhost:1112/userlocations`,
-                  success: function(userdata) {
-                     $.ajax({
-                             type: `GET`,
-                             url: `http://localhost:1112/gettaxiroutes`,
-                             success: function(taxidata) {
-                             initMap(areadata, userdata, taxidata);
+                             initMap(areadata);
                              }
-                      });
-                  }
-           });
-        }
-    });
+               });
+
   </script>
+    <i id="user" class="fa fa-user fa-2x"></i>
   </body>
 </html>

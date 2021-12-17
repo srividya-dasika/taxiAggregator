@@ -2,7 +2,8 @@ import time
 
 import pandas as pd
 import threading
-from taxiModel import TaxiModel
+from src.taxiModel import TaxiModel
+from src.userModel import UserModel
 
 class TaxiSimulator:
 
@@ -13,6 +14,17 @@ class TaxiSimulator:
         df = df.to_dict(orient = 'records')
         return df
 
+    def getInitialUserLocations(self,location,proximity,search_limit):
+        user = UserModel()
+        return user.get_nearby_users(location,proximity,search_limit)
+
+    def getInitialTaxiLocations(self,location,proximity,search_limit,type):
+        taxis = TaxiModel()
+        return taxis.find_by_proximity(location,proximity,search_limit,type)
+
+    def getTaxiCurrentCoords(self,taxi_reg_no):
+        taxis = TaxiModel()
+        return taxis.find_taxi_by_reg_no(taxi_reg_no)
 
     def setInitialTaxiCoords(self,fileToProcess):
         taxiModel = TaxiModel()
