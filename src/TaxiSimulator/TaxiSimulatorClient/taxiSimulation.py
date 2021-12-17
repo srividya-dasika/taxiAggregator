@@ -21,7 +21,8 @@ class TaxiSimulator:
                 taxi_row = taxi_row.rstrip()
                 if taxi_row:
                     (reg_no, brand, model, type, base_rate, vacant, currentLat, currentLong, city) = taxi_row.split(',')
-                taxiModel.insertNewTaxi(reg_no, model, brand, type, vacant, base_rate, currentLat, currentLong)
+                    #print(reg_no, brand, model, type, base_rate, vacant, currentLat, currentLong, city)
+                taxiModel.insertNewTaxi(reg_no, model, brand, type, vacant, base_rate, currentLat, currentLong, city)
 
     def simulateTaxis(self,fileToProcess):
         taxiModel = TaxiModel()

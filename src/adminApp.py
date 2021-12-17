@@ -45,6 +45,16 @@ def createDriver():
         return "Driver added Successfully!"
     else:
         return 'Content-Type not supported!'
+def createServiceAreaBoundaries():
+    Service_area_boundary_obj = ServiceAreaBoundary()
+
+    with open('Pune City.geojson') as f:
+        data = f.read()
+        js = json.loads(data)
+        city = js['features'][0]['properties']['name']
+        create_result = Service_area_boundary_obj.create_boundary(city, js)
+        if create_result != None:
+            print (f'Service area boundary created for {city}')
 
 if __name__ == '__main__':
     application.run(host = 'localhost', debug = True, port = 1112)

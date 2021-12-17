@@ -11,8 +11,8 @@ class TaxiRegistration:
 
     taxi_data = []
     def generate_taxi_details(self, loc_name):
-        with open('../TaxiSimulator/TaxiSimulatorClient/taxi_reg_tvm.csv', 'w', newline='') as csvfile:
-            taxi_brand = {'Luxury': ['Audi, BMW', 'Jaguar', 'Mercedes'],
+        with open('../TaxiSimulator/TaxiSimulatorClient/taxi_reg_hyd.csv', 'w', newline='') as csvfile:
+            taxi_brand = {'Luxury': ['Audi', 'BMW', 'Jaguar', 'Mercedes'],
                           'Deluxe': ['Ecosport', 'skoda', 'Ciaz'],
                           'Basic': ['Zen', 'Tiago', 'Sonet']
                           }
@@ -23,7 +23,6 @@ class TaxiRegistration:
 
             writer_handle = csv.writer(csvfile)
             for i in range(1, TaxiRegistration.NUMBER_OF_USERS):
-
                 #loc_name = random.choice(['Pune City', 'Hyderabad', 'Thiruvananthapuram'])
                 rand_lat_seed = geo_center[loc_name][0] - 0.3
                 rand_lon_seed = geo_center[loc_name][1] - 0.3
@@ -50,17 +49,17 @@ class TaxiRegistration:
                                   'coordinates': [long, lat]},
                               'location_name': loc_name})
                 print( f'{taxi_reg_no}, {brand}, {model}, {taxi_type}, {base_rate}, {vacant}, {lat}, {long}, {loc_name}')
-
+                taxi_info_string = [taxi_reg_no, brand, model, taxi_type, base_rate, vacant, lat, long, loc_name]
                 self.taxi_data.append(taxi_info)
-            writer_handle.writerow(self.taxi_data)
+                writer_handle.writerow(taxi_info_string)
         db = Database()
         print(type(self.taxi_data))
         obj = CollectionMapper(loc_name)
-        collection = obj.get_collection_name
-        db.insert_many(collection, self.taxi_data)
+        collection =obj.get_collection_name
+        db.insert_many(collection,self.taxi_data)
         return taxi_info
 
 obj = TaxiRegistration()
-obj.generate_taxi_details('Thiruvananthapuram')
+obj.generate_taxi_details('Hyderabad')
 
 

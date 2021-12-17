@@ -42,9 +42,13 @@ class Database:
         documents = db_collection.find(key)
         return documents
 
-    def upsertData(self,collection,filter,key):
+    def updateOne(self,collection, filter, update,upsert= False):
         db_collection = self._db[collection]
-        documents = db_collection.update_one(filter,key,upsert=False)
+        return db_collection.update_one(filter, update)
+
+    def upsertData(self,collection,filter,record):
+        db_collection = self._db[collection]
+        documents = db_collection.replace_one(filter,record,upsert=False)
 
     def insert_many(self, collection, obj):
         db_collection = self._db[collection]
