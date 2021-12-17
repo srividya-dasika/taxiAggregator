@@ -46,9 +46,9 @@ class Taxi:
 
 
 
-    def updateTaxiStatus(self,city, taxi_reg_no, taxi_coord, user_coord ,status):
+    def updateTaxiStatus(self,city, taxi_reg_no, taxi_current_coord, taxi_dest_coord ,status):
 
         print("Taxi with ",taxi_reg_no," status changed to ",status)
-        return self.taxi_model.update_one(city, taxi_reg_no, taxi_coord, user_coord ,status)
+        return self.taxi_model.update_one(city, taxi_reg_no, taxi_current_coord, taxi_dest_coord ,status)
 
 

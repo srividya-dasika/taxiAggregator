@@ -43,10 +43,12 @@ class Database:
         documents = db_collection.find(key)
         return documents
 
+    def updateOne(self,collection, filter, update,upsert= False):
+        db_collection = self._db[collection]
+        return db_collection.update_one(filter, update)
 
     def upsertData(self,collection,filter,record):
         db_collection = self._db[collection]
-
         documents = db_collection.replace_one(filter,record,upsert=True)
         print (documents)
 

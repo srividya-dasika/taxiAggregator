@@ -37,6 +37,7 @@ class TaxiModel:
 
     # Private function (starting with __) to be used as the base for all find functions
     def __find(self, collection, key):
+        print('__find', collection, key)
         taxi_document = self._db.get_single_data(collection, key)
         return taxi_document
 
@@ -101,8 +102,9 @@ class TaxiModel:
     def update_one(self, city, taxi_reg_no, taxi_coord, user_coord ,status):
         collection = self.__get_taxi_collection(city)
         search_key = {'taxi_reg_no': taxi_reg_no}
-        update_key = {'vacant': status}
-        return self._db.upsertData(collection, search_key, update_key, False)
+        update_key = {"$set": {'vacant': status}}
+        return self._db.updateOne(collection, search_key, update_key, False)
+
 
     '''
     def update_one(self, reg_no, status, city):

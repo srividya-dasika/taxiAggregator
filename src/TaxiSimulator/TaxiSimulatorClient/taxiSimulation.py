@@ -20,8 +20,10 @@ class TaxiSimulator:
             for taxi_row in taxis_fh:
                 taxi_row = taxi_row.rstrip()
                 if taxi_row:
+                    #print (taxi_row)
                     (reg_no, brand, model, type, base_rate, vacant, currentLat, currentLong, city) = taxi_row.split(',')
-                taxiModel.insertNewTaxi(reg_no, model, brand, type, vacant, base_rate, currentLat, currentLong)
+                    #print(reg_no, brand, model, type, base_rate, vacant, currentLat, currentLong, city)
+                taxiModel.insertNewTaxi(reg_no, model, brand, type, vacant, base_rate, currentLat, currentLong, city)
 
     def simulateTaxis(self,fileToProcess):
         taxiModel = TaxiModel()
@@ -67,3 +69,4 @@ class TaxiSimulator:
 
 obj = TaxiSimulator()
 obj.setInitialTaxiCoords('taxi_reg_hyd.csv')
+obj.endTrip()

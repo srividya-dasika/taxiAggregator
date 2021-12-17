@@ -5,15 +5,15 @@ import random
 import csv
 
 class TaxiRegistration:
-    NUMBER_OF_USERS = 30
+    NUMBER_OF_USERS = 300
 
 
     #def __init__(self):
 
     taxi_data = []
     def generate_taxi_details(self, loc_name):
-        with open('../TaxiSimulator/TaxiSimulatorClient/taxi_reg_tvm.csv', 'w', newline='') as csvfile:
-            taxi_brand = {'Luxury': ['Audi, BMW', 'Jaguar', 'Mercedes'],
+        with open('../TaxiSimulator/TaxiSimulatorClient/taxi_reg_hyd.csv', 'w', newline='') as csvfile:
+            taxi_brand = {'Luxury': ['Audi', 'BMW', 'Jaguar', 'Mercedes'],
                           'Deluxe': ['Ecosport', 'skoda', 'Ciaz'],
                           'Basic': ['Zen', 'Tiago', 'Sonet']
                           }
@@ -50,9 +50,9 @@ class TaxiRegistration:
                                   'coordinates': [long, lat]},
                               'location_name': loc_name})
                 print( f'{taxi_reg_no}, {brand}, {model}, {taxi_type}, {base_rate}, {vacant}, {lat}, {long}, {loc_name}')
-
+                taxi_info_string = [taxi_reg_no, brand, model, taxi_type, base_rate, vacant, lat, long, loc_name]
                 self.taxi_data.append(taxi_info)
-            writer_handle.writerow(self.taxi_data)
+                writer_handle.writerow(taxi_info_string)
         db = Database()
         print(type(self.taxi_data))
         obj = CollectionMapper(loc_name)
@@ -61,6 +61,6 @@ class TaxiRegistration:
         return taxi_info
 
 obj = TaxiRegistration()
-obj.generate_taxi_details('Pune City')
+obj.generate_taxi_details('Hyderabad')
 
 

@@ -1,6 +1,7 @@
 from src.Taxi.taxiActions import Taxi
 
 class Users:
+
     def __init__(self, username,userLocation):
         self.username = username
         self._location = userLocation
