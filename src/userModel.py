@@ -1,6 +1,9 @@
-from src.Utils.database import Database
+from database import Database
 # Imports ObjectId to convert to the correct format before querying in the db
 from bson.objectid import ObjectId
+from pymongo import GEOSPHERE
+from bson.son import SON
+from taxiModel import Taxi
 
 
 # User document contains details about the all registered Users/Riders of the TaxiApp
@@ -65,3 +68,47 @@ class UserModel:
         }
         user_obj_id = self._db.insert_single_data(UserModel.USER_COLLECTION, user_data)
         return self.find_by_object_id(user_obj_id)
+
+    def get_nearby_users(self,geospacial_location, proximity, search_limit):
+            collection = self.USER_COLLECTION
+            range_query = {'currentCoordinates': SON([("$near", geospacial_location), ("$maxDistance", proximity)])}
+            return self._db.get_multiple_data(collection, range_query, search_limit)
+
+class Users:
+
+    def __init__(self, username, userLocation):
+        self.username = username
+        self._location = userLocation
+
+    def get_user_location(self):
+        return self._location['coordinates']
+
+    def login(self, username):  # check if user exists in db and if so , login successfully
+        return 1
+
+    def add_new_user(self, username, location):  # Adding new user into DB.
+
+        return 1
+
+    def requestTaxi(self, type):
+        #  Send request to book a taxi to the taxi service.
+        #  Wait till a taxi is allotted.
+        #  Then change user status to riding
+        print('\n\n\n')
+        print(self.username, " requested for taxi...")
+        taxis = Taxi()
+        # nearbyTaxis = taxis.getNearestTaxis(self.username,self.location, type)
+        return taxis.getNearestTaxis(self.username, self._location, type)
+
+    #        if self.checkDriverAvailability(nearbyTaxis[0]):
+    #           taxis.updateTaxiStatus(nearbyTaxis[0].reg_no,"Occupied")
+
+    def confirmTaxiBooking(self, city, taxi_reg_no, taxi_coord, user_coord):
+        taxis = Taxi()
+        return taxis.updateTaxiStatus(city, taxi_reg_no, taxi_coord, user_coord, 'Booked')
+
+    def checkDriverAvailability(self, Taxi):
+        return True
+
+
+

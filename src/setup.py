@@ -1,17 +1,14 @@
-import random
 # Imports MongoClient for base level access to the local MongoDB
 from pymongo import MongoClient
 # Imports datetime class to create timestamp for weather data storage
-from datetime import datetime
 
 
 # Database host ip and port information
-from src.Users.userModel import UserModel
 
 HOST = '127.0.0.1'
 PORT = '27017'
 
-RELATIVE_CONFIG_PATH = '../../config/'
+RELATIVE_CONFIG_PATH = '../config/'
 
 DB_NAME = 'TaxiApp_DB'
 USER_COLLECTION = 'users'

@@ -2,10 +2,8 @@
 # 1. Single requests from single user
 # 2. Parallel requests from 3 users.
 import threading
-from src.Users.userActions import Users
-from src.Location.locationService import Location
-import time
-import random
+from userModel import Users
+from locationService import Location
 
 class UserSimulation:
 
@@ -41,7 +39,6 @@ class UserSimulation:
 
     def simulateMultiUserRequest(self):
         # Out of service area
-
         user1Location = Location("Point", "Hyderabad", 17.2279, 78.486956)
         user1 = Users("user1", user1Location.current_loc)
 

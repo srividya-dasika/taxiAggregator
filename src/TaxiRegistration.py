@@ -1,12 +1,11 @@
-from src.Location.locationService import Location
-from src.Utils.database import Database
-from src.Utils.CollectionMap import CollectionMapper
+from locationService import Location
+from database import Database
+from CollectionMap import CollectionMapper
 import random
 import csv
 
 class TaxiRegistration:
-    NUMBER_OF_USERS = 300
-
+    NUMBER_OF_USERS = 30
 
     #def __init__(self):
 

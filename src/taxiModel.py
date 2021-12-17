@@ -1,9 +1,11 @@
 
-from src.Utils.database import Database
+from database import Database
 # Imports ObjectId to convert to the correct format before querying in the db
 from bson.objectid import ObjectId
-from src.Utils.CollectionMap import CollectionMapper
-
+from bson.son import SON
+from pymongo import GEOSPHERE
+from CollectionMap import CollectionMapper
+from ServiceArea import ServiceArea
 # Taxi document contains reg no (String), brand (String), model (String), type (String) and currentLocation (GeoJSON)fields
 class TaxiModel:
     TAXI_COLLECTION = 'taxi_location'
@@ -68,20 +70,25 @@ class TaxiModel:
     def find_by_proximity(self, geospacial_location, proximity, search_limit, taxi_type ='All'):
         collection = self.__get_taxi_collection(geospacial_location['city'])
         if taxi_type != 'All':
-            key = {'$and': [{'location':
+            key = {'$and': [{'currentCoordinates':
                    {'$geoWithin':
                         {'$centerSphere': [geospacial_location['coordinates'], proximity / 6371]}}}
                             ,{'taxi_type': taxi_type}
                             ,{'vacant':'vacant'}
                             ]}
         else:
-            key = {'$and': [{'location':
+            key = {'$and': [{'currentCoordinates':
                    {'$geoWithin':
                         {'$centerSphere': [geospacial_location['coordinates'], proximity / 6371]}}}
                             ,{'vacant':'vacant'}
                             ]}
 
         return self._db.get_multiple_data(collection, key, search_limit)
+
+    def getAllTaxisInArea(self,geospacial_location, proximity, search_limit):
+        collection = self.__get_taxi_collection(geospacial_location['city'])
+        range_query = {'currentCoordinates': SON([("$near", geospacial_location), ("$maxDistance", proximity)])}
+        return self._db.get_multiple_data(collection, range_query, search_limit)
 
     def upsertTaxiCoords(self,reg_no,lat,long, city):
         print("Upserting Taxi Coords")
@@ -106,10 +113,34 @@ class TaxiModel:
         return self._db.updateOne(collection, search_key, update_key, False)
 
 
-    '''
-    def update_one(self, reg_no, status, city):
-        collection = self.__get_taxi_collection(city)
-        search_key = {'taxi_reg_no': reg_no}
-        update_key = {"$set": {'status': status}}
-        return self._db.upsertData(collection, search_key, update_key)
-    '''
+class Taxi:
+    proximityRadius = 8  # assuming proximity factor as 3 kms.
+    searchResultLimit = 5  # limit the number of search results
+
+    def __init__(self, reg_no=0):
+        self.reg_no = reg_no
+        # self.location = location
+        self.taxi_model = TaxiModel()
+
+    def add_new_taxi(self, taxi_reg_no, location):  # Adding new user into DB.
+        return 1
+
+    def getNearestTaxis(self, username, userLocation, taxi_type):
+        #  Send request to book a taxi to the taxi service.
+        #  Wait till a taxi is allotted.
+        #  Then change user status to riding
+        print("Fetching taxis in", self.proximityRadius, "km radius for", username)
+        obj_serv = ServiceArea()
+        within_service_area = obj_serv.validate_service_area(userLocation)
+        if within_service_area:
+            # Mongoquery to get all nearby taxis.
+            return self.taxi_model.find_by_proximity(userLocation, self.proximityRadius, self.searchResultLimit,
+                                                     taxi_type)
+        else:
+            print('Error: Either city name is incorrect or user location is not in our service area')
+
+    def updateTaxiStatus(self, city, taxi_reg_no, taxi_current_coord, taxi_dest_coord, status):
+        print("Taxi with ", taxi_reg_no, " status changed to ", status)
+        return self.taxi_model.update_one(city, taxi_reg_no, taxi_current_coord, taxi_dest_coord, status)
+
+

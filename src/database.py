@@ -1,19 +1,18 @@
 # Imports MongoClient for base level access to the local MongoDB
-from pymongo import MongoClient
+from pymongo import MongoClient, GEOSPHERE
 
 
 class Database:
-    #HOST = '127.0.0.1'
-    #PORT = '27017'
-    DB_NAME = 'Taxi_Aggregator_DB'
+    HOST = '54.165.227.98'
+    PORT = '27017'
+    DB_NAME = 'TaxiApp_DB'
 
     def __init__(self):
-        #self._db_conn = MongoClient(f'mongodb://{Database.HOST}:{Database.PORT}')
-        #self._db = self._db_conn[Database.DB_NAME]
+       # uri = "mongodb://user:password@example.com/?authSource=the_database&authMechanism=SCRAM-SHA-1"
 
-        self._db_conn = MongoClient(
-            "mongodb+srv://test:test@cluster0.5dwwl.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
+        self._db_conn = MongoClient(f'mongodb://taxiAppUser:Test1234@{Database.HOST}:{Database.PORT}/?authSource={Database.DB_NAME}&authMechanism=SCRAM-SHA-1')
         self._db = self._db_conn[Database.DB_NAME]
+
 
     # This method finds a single document using field information provided in the key parameter
     # It assumes that the key returns a unique document. It returns None if no document is found
@@ -49,8 +48,7 @@ class Database:
 
     def upsertData(self,collection,filter,record):
         db_collection = self._db[collection]
-        documents = db_collection.replace_one(filter,record,upsert=True)
-        print (documents)
+        documents = db_collection.replace_one(filter,record,upsert=False)
 
     def insert_many(self, collection, obj):
         db_collection = self._db[collection]
@@ -66,5 +64,13 @@ class Database:
 
     def get_multiple_data(self, collection, key, search_limit):
         db_collection = self._db[collection]
+        print(f'creating index on {collection}')
+        db_collection.create_index([('currentCoordinates', GEOSPHERE)])
+        print(f'querying for {key} with limit {search_limit}')
+        records = db_collection.find(key).limit(search_limit)
+        i=0
+        for record in records:
+            i=i+1
+        print(f'Count of records received = {i}')
         return db_collection.find(key).limit(search_limit)
 

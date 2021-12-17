@@ -2,7 +2,7 @@ import time
 
 import pandas as pd
 import threading
-from src.Taxi.taxiModel import TaxiModel
+from taxiModel import TaxiModel
 
 class TaxiSimulator:
 
@@ -20,7 +20,6 @@ class TaxiSimulator:
             for taxi_row in taxis_fh:
                 taxi_row = taxi_row.rstrip()
                 if taxi_row:
-                    #print (taxi_row)
                     (reg_no, brand, model, type, base_rate, vacant, currentLat, currentLong, city) = taxi_row.split(',')
                     #print(reg_no, brand, model, type, base_rate, vacant, currentLat, currentLong, city)
                 taxiModel.insertNewTaxi(reg_no, model, brand, type, vacant, base_rate, currentLat, currentLong, city)
@@ -67,6 +66,3 @@ class TaxiSimulator:
             i=i+1
            # taxiModel.upsertTaxiCoords(taxiDetails.split('&')[0], taxiDetails.split('&')[1], taxiDetails.split('&')[2])
 
-obj = TaxiSimulator()
-obj.setInitialTaxiCoords('taxi_reg_hyd.csv')
-obj.endTrip()
