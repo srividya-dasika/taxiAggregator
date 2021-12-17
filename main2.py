@@ -9,13 +9,13 @@ taxi_coll = TaxiModel()
 driver_coll = DriverModel()
 #Admin App - Taxi and user registration
 #Register New User
-user_coll.insertNewUser("user1","test@test.com","2021-10-10","male",1234123412,"test",10.1234,12.1234)
+#user_coll.insertNewUser("user1","test@test.com","2021-10-10","male",1234123412,"test",10.1234,12.1234)
 
 #Register New Taxi
-taxi_coll.insertNewTaxi("ka12bs1234","Test","Test23","economy","true",30,12.1234,12.2334)
+#taxi_coll.insertNewTaxi("ka12bs1234","Test","Test23","economy","true",30,12.1234,12.2334)
 
 #Register Driver
-driver_coll.insertNewDriver("driver1","email","2020-10-10","female",1234123412,"test2",17.8989,78.9999)
+#driver_coll.insertNewDriver("driver1","email","2020-10-10","female",1234123412,"test2",17.8989,78.9999)
 
 ################################################################################
 #Initial Area Creation - Defining the Rectangle

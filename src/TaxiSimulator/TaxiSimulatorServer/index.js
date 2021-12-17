@@ -1,15 +1,12 @@
-
-function initMap(areadata,userdata,taxidata) {
-   console.log(userdata);
+//import { faCar } from "@fontawesome/free-solid-svg-icons";
+function initMap(areadata) {
    console.log(areadata);
-   console.log(taxidata);
    const map = new google.maps.Map(document.getElementById("map"), {
     zoom: 11,
     center: { lat: 17.480660, lng: 78.493740 },
     mapTypeId: "terrain",
   });
-
- const rectangle = new google.maps.Rectangle({
+  const rectangle = new google.maps.Rectangle({
     strokeColor: "#FF0000",
     strokeOpacity: 0.8,
     strokeWeight: 2,
@@ -23,48 +20,149 @@ function initMap(areadata,userdata,taxidata) {
       west: areadata[0]['westLong'] ,
     },
   });
-
-  // use a Material Icon as font
-  for (let i=0; i<userdata.length; i++){
-  new google.maps.Marker({
-    position: { lat: userdata[i][`latitude`], lng: userdata[i][`longitude`] },
-    map,
-    label: {
-      text: "\ue530",
-      fontFamily: "Material Icons",
-      color: "#ffffff",
-      fontSize: "18px",
-    },
-    title: "Material Icon Font Marker",
-  });
-  }
-  for(let t=0;t<taxidata.length;t++){
-    console.log("Plotting for "+taxidata[t][`taxiName`])
-    plotTaxi(map,taxidata[t][`taxiName`],taxidata[t][`startLat`],taxidata[t][`startLong`],taxidata[t][`endLat`],taxidata[t][`endLong`],"#000000");
+  setUsersOnMap(map);
+ // var taxis;
+  taxis = setTaxisOnMap(map);
+  console.log(taxis);
+  for(let t=0;t<taxis.length;t++){
+    console.log("Plotting for "+taxis[t]['taxiName'])
+    plotTaxi(map,taxis[t]['taxiName'],taxis[t]['latitude'],taxis[t]['longitude'],"#000000");
   }
 }
 
-async function plotTaxi(map,taxiName,startLat,startLang,endLat,endLang,colorCode){
-for (let i = startLat ,j=startLang; i < endLat& j<endLang ; i=i+0.0001,j=j+0.0001){
-const taxiCoordinates = [
-    { lat: i, lng: j },
-    { lat: i+0.0001, lng: j+0.0001 },
-  ];
+function setUsersOnMap(map){
+ $.ajax({
+        type: "POST",
+        url: "http://localhost:1112/userInitialLocations",
+        contentType: 'application/json',
+        data: JSON.stringify({
+               "location":"Hyderabad",
+               "currentLat":78.8989,
+               "currentLong":17.9090
+              }),
+         dataType: 'json',
+        success: function(userdata) {
+                             // use a Material Icon as font
+                             console.log(userdata);
+                            for (let i=0; i<userdata.length; i++){
+                            console.log("users lat longs - "+userdata[i][`latitude`]+userdata[i][`longitude`]);
+                           // const image ="https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png";;
+                           const iconBase ="https://developers.google.com/maps/documentation/javascript/examples/full/images/";
+                        new google.maps.Marker({
+                                /* position: { lat: 17.4909, lng: 78.4990 },*/
+                                    position: {lat:userdata[i][`longitude`], lng:userdata[i][`latitude`]},
+                                      map,
+                                      /*label: {
+                                                 text: "\ue530",
+                                                 fontFamily: "Material Icons",
+                                                 color: "#ffffff",
+                                                 fontSize: "18px",
+                                               },*/
+                                       icon: iconBase + "parking_lot_maps.png",
+                                       title: "Material Icon Font Marker",
+                                });
+                              }
+                             }
+        })
+
+}
+
+function setTaxisOnMap(map){
+var result=""
+$.ajax({
+        async: false,
+        type: "POST",
+        url: "http://localhost:1112/taxiInitiallocations",
+        contentType: 'application/json',
+        data: JSON.stringify({
+               "location":"Hyderabad",
+               "currentLat":78.8989,
+               "currentLong":17.9090
+              }),
+         dataType: 'json',
+         success: function(taxidata) {
+                            result=taxidata;
+                            console.log("got "+taxidata.length+" taxis");
+                            for (let i=0; i<taxidata.length; i++){
+                            console.log("taxi lat longs - "+taxidata[i][`latitude`]+taxidata[i][`longitude`]);
+                            const image ="user.svg";
+                            const iconBase ="https://developers.google.com/maps/documentation/javascript/examples/full/images/";
+                              new google.maps.Marker({
+                                position: { lat: taxidata[i][`longitude`], lng: taxidata[i][`latitude`] },
+                                map,
+                                icon: iconBase + "library_maps.png",
+                                /*label: {
+                                  text: "\ue530",
+                                  fontFamily: "Material Icons",
+                                  color: "#2711ed",
+                                  fontSize: "18px",
+                                },*/
+                                title: "Material Icon Font Marker",
+                              });
+                              }
+                            }
+        })
+        return result;
+}
+async function plotTaxi(map,regNo,startLat,startLang,colorCode){
+  //var i=0;
+  //while (i<60) {
+    var newLat=startLat;
+    var newLong=startLang;
+   // getTaxiCoords(taxiName)
     $.ajax({
         type: "POST",
-        url: "http://localhost:1112/settaxicoords/"+taxiName+"&"+i+"&"+j,
+        url: "http://localhost:1112/taxiCurrentLocations/",
+        contentType: 'application/json',
+        data: JSON.stringify({
+               "location":"Hyderabad",
+               "reg_no":regNo
+              }),
+         dataType: 'json',
+        success: function(newCoords) {
+                            console.log("getting taxi locations for - "+regNo);
+                             newLat=newCoords[0]['latitude'];
+                             newLong = newCoords[0]['longitude'];
+                             console.log("got new coordinates as -"+newLat+" & "+newLong)
+                             const taxiCoordinates = [
+                                    { lat: startLang, lng: startLat },
+                                    { lat: newLong, lng: newLat },
+                                ];
+                            const taxiPath = new google.maps.Polyline({
+                             path: taxiCoordinates,
+                             geodesic: true,
+                              strokeColor: colorCode,
+                                strokeOpacity: 1.0,
+                             strokeWeight: 2,
+                            });
+                          taxiPath.setMap(map)
+                             }
     })
-  const taxiPath = new google.maps.Polyline({
-    path: taxiCoordinates,
-    geodesic: true,
-    strokeColor: colorCode,
-    strokeOpacity: 1.0,
-    strokeWeight: 2,
-  });
+     await sleep(1000);
+     plotTaxi(map,regNo,newLat,newLong,colorCode);
+    //i++;
 
-    taxiPath.setMap(map)
-    await sleep(1000);
- }}
+ }
  function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
+
+function getTaxiCoords(regNo){
+ $.ajax({
+        type: "POST",
+        url: "http://localhost:1112/taxiCurrentLocations/",
+        contentType: 'application/json',
+        data: JSON.stringify({
+               "location":"Hyderabad",
+               "reg_no":regNo
+              }),
+         dataType: 'json',
+        success: function(newCoords) {
+                            console.log("getting taxi locations for - "+regNo);
+
+                             newLat=newCoords['latitude'];
+                             newLong = newCoords['longitude'];
+                             getTaxiCoords(regNo);
+                             }
+    })
+ }
