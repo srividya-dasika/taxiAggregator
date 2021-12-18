@@ -5,7 +5,7 @@ from driverModel import DriverModel
 from userModel import UserModel
 from ServiceArea import ServiceAreaBoundary
 import json
-'''
+
 application = Flask(__name__)
 CORS(application)
 @application.route('/createUser', methods = ['POST','GET'])
@@ -46,7 +46,7 @@ def createDriver():
         return "Driver added Successfully!"
     else:
         return 'Content-Type not supported!'
-'''
+
 def createServiceAreaBoundaries(geoJsonFile):
     Service_area_boundary_obj = ServiceAreaBoundary()
 
@@ -58,9 +58,11 @@ def createServiceAreaBoundaries(geoJsonFile):
         if create_result != None:
             print (f'Service area boundary created for {city}')
 
-#if __name__ == '__main__':
-#    application.run(host = 'localhost', debug = True, port = 1112)
+if __name__ == '__main__':
+    application.run(host = 'localhost', debug = True, port = 1112)
 
+'''
 createServiceAreaBoundaries('Pune City.geojson')
 createServiceAreaBoundaries('Hyderabad.geojson')
 createServiceAreaBoundaries('Thiruvananthapuram.geojson')
+'''

@@ -1,4 +1,3 @@
-
 from database import Database
 # Imports ObjectId to convert to the correct format before querying in the db
 from bson.objectid import ObjectId
@@ -6,6 +5,7 @@ from bson.son import SON
 from pymongo import GEOSPHERE
 from CollectionMap import CollectionMapper
 from ServiceArea import ServiceArea
+from Trip import Trip
 # Taxi document contains reg no (String), brand (String), model (String), type (String) and currentLocation (GeoJSON)fields
 class TaxiModel:
     TAXI_COLLECTION = 'taxi_location'
@@ -85,6 +85,7 @@ class TaxiModel:
 
         return self._db.get_multiple_data(collection, key, search_limit)
 
+    # Find taxis by proximity and taxi type but limit the number of search results returned to the user
     def getAllTaxisInArea(self,geospacial_location, proximity, search_limit):
         collection = self.__get_taxi_collection(geospacial_location['city'])
         range_query = {'currentCoordinates': SON([("$near", geospacial_location), ("$maxDistance", proximity)])}
@@ -98,19 +99,19 @@ class TaxiModel:
         record = {'taxi_reg_no': reg_no, 'currentCoordinates': currentCoordinates}
         self._db.upsertData(collection,filter,record)
 
-        # Find taxis by proximity and taxi type but limit the number of search results returned to the user
-
     def get_taxi_details(self, reg_no, city):
         collection = self.__get_taxi_collection(city)
         key = {'taxi_reg_no': reg_no}
         return self._db.get_single_data(collection, key)
 
-
-    def update_one(self, city, taxi_reg_no, taxi_coord, user_coord ,status):
+    # Find the taxi with that registration number and with that 'from_status' and update that to 'to_status'
+    def update_booking(self, city, taxi_reg_no, taxi_coord, user_coord ,from_status, to_status):
         collection = self.__get_taxi_collection(city)
-        search_key = {'taxi_reg_no': taxi_reg_no}
-        update_key = {"$set": {'vacant': status}}
-        return self._db.updateOne(collection, search_key, update_key, False)
+
+        search_key = {'taxi_reg_no': taxi_reg_no, 'vacant': from_status }
+        update_key = {"$set": {'vacant': to_status}}
+        status = self._db.updateOne(collection, search_key, update_key, False)
+        return status.matched_count
 
 
 class Taxi:
@@ -139,8 +140,21 @@ class Taxi:
         else:
             print('Error: Either city name is incorrect or user location is not in our service area')
 
-    def updateTaxiStatus(self, city, taxi_reg_no, taxi_current_coord, taxi_dest_coord, status):
-        print("Taxi with ", taxi_reg_no, " status changed to ", status)
-        return self.taxi_model.update_one(city, taxi_reg_no, taxi_current_coord, taxi_dest_coord, status)
+    def updateTaxiStatus(self, city, taxi_reg_no, taxi_current_coord, taxi_dest_coord, from_status, to_status):
+
+        ############## Send SNS to taxi
+        ############## Send SNS to User
+
+        return self.taxi_model.update_booking(city, taxi_reg_no, taxi_current_coord, taxi_dest_coord, from_status, to_status)
+
+    def startTrip(self, city, taxi_reg_no, customer_phone_no,taxi_current_coord,  taxi_dest_coord):
+        self.trip_obj = Trip(city, taxi_reg_no, customer_phone_no)
+        ############## Send SNS to taxi and user
+        return self.trip_obj.start_trip(city, taxi_current_coord,  taxi_dest_coord)
+
+    def endTrip(self, trip_id):
+        return self.trip_obj.end_trip(trip_id)
+
+
 
 

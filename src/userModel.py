@@ -105,7 +105,11 @@ class Users:
 
     def confirmTaxiBooking(self, city, taxi_reg_no, taxi_coord, user_coord):
         taxis = Taxi()
-        return taxis.updateTaxiStatus(city, taxi_reg_no, taxi_coord, user_coord, 'Booked')
+        return taxis.updateTaxiStatus(city, taxi_reg_no, taxi_coord, user_coord, 'vacant','Booked')
+
+    def confirmTripCompletion(self, city, taxi_reg_no, taxi_coord, user_coord):
+        taxis = Taxi()
+        return taxis.updateTaxiStatus(city, taxi_reg_no,taxi_coord, user_coord, 'Booked' ,'vacant')
 
     def checkDriverAvailability(self, Taxi):
         return True
