@@ -3,19 +3,19 @@ from pymongo import MongoClient, GEOSPHERE
 
 
 class Database:
-    HOST = '3.92.193.183'
+    HOST = '52.205.211.239'
     PORT = '27017'
     DB_NAME = 'TaxiApp_DB'
 
     def __init__(self):
        # uri = "mongodb://user:password@example.com/?authSource=the_database&authMechanism=SCRAM-SHA-1"
 
-        #self._db_conn = MongoClient(f'mongodb://taxiAppUser:Test1234@{Database.HOST}:{Database.PORT}/?authSource={Database.DB_NAME}&authMechanism=SCRAM-SHA-1')
-        #self._db = self._db_conn[Database.DB_NAME]
-
-
-        self._db_conn = MongoClient("mongodb+srv://test:test@cluster0.5dwwl.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
+        self._db_conn = MongoClient(f'mongodb://taxiAppUser:Test1234@{Database.HOST}:{Database.PORT}/?authSource={Database.DB_NAME}&authMechanism=SCRAM-SHA-1')
         self._db = self._db_conn[Database.DB_NAME]
+
+
+        #self._db_conn = MongoClient("mongodb+srv://test:test@cluster0.5dwwl.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
+        #self._db = self._db_conn[Database.DB_NAME]
 
     # This method finds a single document using field information provided in the key parameter
     # It assumes that the key returns a unique document. It returns None if no document is found

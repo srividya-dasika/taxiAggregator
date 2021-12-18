@@ -15,8 +15,10 @@ class TaxiModel:
         self._latest_error = ''
 
     def __get_taxi_collection (self, city):
+        print(f'[taxiModel]getting collection name for {city} ')
         self._db_collection = CollectionMapper(city)
         self._city_db = self._db_collection.get_collection_name
+        print(f'{self._city_db}')
         return self._city_db
 
     # Latest error is used to store the error string in case an issue. It's reset at the beginning of a new function call
@@ -68,6 +70,7 @@ class TaxiModel:
 
     # Find taxis by proximity and taxi type but limit the number of search results returned to the user
     def find_by_proximity(self, geospacial_location, proximity, search_limit, taxi_type ='All'):
+        print(f'getting collectionname for city - {geospacial_location}')
         collection = self.__get_taxi_collection(geospacial_location['city'])
         if taxi_type != 'All':
             key = {'$and': [{'currentCoordinates':
@@ -82,8 +85,18 @@ class TaxiModel:
                         {'$centerSphere': [geospacial_location['coordinates'], proximity / 6371]}}}
                             ,{'vacant':'vacant'}
                             ]}
+        print(f'getting data from collection - {collection}')
+        taxiData= self._db.get_multiple_data(collection, key, search_limit)
+        print(f'Got Taxi Data from DB {taxiData}')
+        docs = list(taxiData)
+        taxi_dict = []
+        print("Taxis data:", docs)
+        for doc in docs:
+           Dict = {'taxiName': doc['reg_no'], 'latitude': doc['currentCoordinates'].get('coordinates')[0],
+                'longitude': doc['currentCoordinates'].get('coordinates')[1]}
+           taxi_dict.append(Dict)
+        return taxi_dict
 
-        return self._db.get_multiple_data(collection, key, search_limit)
 
     # Find taxis by proximity and taxi type but limit the number of search results returned to the user
     def getAllTaxisInArea(self,geospacial_location, proximity, search_limit):
@@ -139,6 +152,7 @@ class Taxi:
                                                      taxi_type)
         else:
             print('Error: Either city name is incorrect or user location is not in our service area')
+            return -1
 
     def updateTaxiStatus(self, city, taxi_reg_no, taxi_current_coord, taxi_dest_coord, from_status, to_status):
 

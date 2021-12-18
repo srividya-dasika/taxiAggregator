@@ -46,7 +46,7 @@ class ServiceArea:
     def validate_service_area(self, userlocation):
 
         service_city = self.find_service_area(userlocation)
-        if userlocation['city'] == service_city:
+        if userlocation['city'].lower() == service_city.lower():
             return True
         else:
             print('Selected city', userlocation['city'], 'or the selected coordinate ',userlocation['coordinates'] ,'is not within service area')
@@ -59,3 +59,5 @@ class ServiceAreaBoundary():
         service_area_def = service_obj.is_service_area_defined(city)
         if service_area_def is False:
             service_obj.create_service_area(boundary_file)
+            return True
+        else: return False

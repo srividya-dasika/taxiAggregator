@@ -17,9 +17,12 @@ def createUser():
     if content_type == 'application/json':
         user_dict = request.json
         print("name=",user_dict['username'])
-        user_coll.insertNewUser(user_dict['username'], user_dict['email'], user_dict['joinedDate'],user_dict['gender'], user_dict['mobileNumber'],
+        user_add = user_coll.insertNewUser(user_dict['username'], user_dict['email'], user_dict['joinedDate'],user_dict['gender'], user_dict['mobileNumber'],
                                 user_dict['location'] , user_dict['latitude'],user_dict['longitude'])
-        return "User added Successfully!"
+        if user_add == -1:
+            return "User already exists!"
+        else:
+            return "User added Successfully!"
     else:
         return 'Content-Type not supported!'
 
@@ -29,9 +32,11 @@ def createTaxi():
     content_type = request.headers.get('Content-Type')
     if content_type == 'application/json':
         taxi_dict = request.json
-        taxi_coll.insertNewTaxi(taxi_dict['taxi_reg_no'],taxi_dict['brand'],taxi_dict['model'],taxi_dict['taxi_type'],taxi_dict['base_rate'],
+        taxi_add = taxi_coll.insertNewTaxi(taxi_dict['taxi_reg_no'],taxi_dict['brand'],taxi_dict['model'],taxi_dict['taxi_type'],taxi_dict['base_rate'],
                                 taxi_dict['vacant'],taxi_dict['latitude'],taxi_dict['longitude'], taxi_dict['location_name'])
-        return "Taxi added Successfully!"
+        if taxi_add == -1:
+            return "Taxi already exists!"
+        else: return "Taxi added Successfully!"
     else:
         return 'Content-Type not supported!'
 
@@ -41,22 +46,35 @@ def createDriver():
     content_type = request.headers.get('Content-Type')
     if content_type == 'application/json':
         driver_dict = request.json
-        driver_coll.insertNewDriver(driver_dict['driverName'], driver_dict['email'], driver_dict['joinedDate'], driver_dict['gender'],
+        driver_add = driver_coll.insertNewDriver(driver_dict['driverName'], driver_dict['email'], driver_dict['joinedDate'], driver_dict['gender'],
                                     driver_dict['mobileNumber'],  driver_dict['latitude'], driver_dict['longitude'], driver_dict['location'])
-        return "Driver added Successfully!"
+        if driver_add == -1:
+            return "Driver already exists!"
+        else: return "Driver Added Successfully"
     else:
         return 'Content-Type not supported!'
 
-def createServiceAreaBoundaries(geoJsonFile):
-    Service_area_boundary_obj = ServiceAreaBoundary()
+@application.route('/createServiceAreaBoundary', methods = ['POST','GET'])
+def createServiceAreaBoundaries():
+    content_type = request.headers.get('Content-Type')
+    if content_type == 'application/json':
+        area_dict = request.json
+        geoJsonFile = area_dict['city']+'.geojson'
+        Service_area_boundary_obj = ServiceAreaBoundary()
 
-    with open(geoJsonFile) as f:
-        data = f.read()
-        js = json.loads(data)
-        city = js['features'][0]['properties']['name']
-        create_result = Service_area_boundary_obj.create_boundary(city, js)
-        if create_result != None:
-            print (f'Service area boundary created for {city}')
+        with open(geoJsonFile) as f:
+            data = f.read()
+            js = json.loads(data)
+            city = js['features'][0]['properties']['name']
+            create_result = Service_area_boundary_obj.create_boundary(city, js)
+            if create_result is True:
+                print (f'Service area boundary created for {city}')
+                return "Service area created successfully!!"
+            else:
+                return "Service area already created!!"
+    else:
+        return 'Content-Type not supported!'
+
 
 if __name__ == '__main__':
     application.run(host = 'localhost', debug = True, port = 1112)
