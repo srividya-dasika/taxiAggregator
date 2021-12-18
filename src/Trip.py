@@ -73,7 +73,8 @@ class Trip():
         trip_id = self.__get_trip_id(city )
         self.__insert_trip_data(trip_id,  hireLong, hireLat, destLong, destLat)
         sns = SendNotifications()
-        sns.sendNotification("trip started with ","Taxi App - Trip Start Message")
+        sns.sendNotification("trip started with "+trip_id,"Taxi App - Trip Start Message","driver")
+        sns.sendNotification("trip started with "+trip_id,"Taxi App - Trip Start Message","user")
         return trip_id
 
     def end_trip(self, trip_id ):
