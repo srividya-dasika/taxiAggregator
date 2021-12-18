@@ -62,7 +62,7 @@ class DriverModel:
             'gender': gender,
             'phoneNo': phoneNo,
             'city': city,
-            'location': currentCoordinates
+            'currentCoordinates': currentCoordinates
         }
         driver_obj_id = self._db.insert_single_data(DriverModel.DRIVER_COLLECTION, driver_data)
         print(f'Registered driver {drivername} app')
