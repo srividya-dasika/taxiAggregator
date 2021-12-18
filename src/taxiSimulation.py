@@ -36,7 +36,7 @@ class TaxiSimulator:
         taxi_dict = []
         print("Taxis data:", docs)
         for doc in docs:
-            Dict = {'taxiName': doc['taxi_reg_no'], 'latitude':doc['currentCoordinates'].get('coordinates')[1],'longitude':doc['currentCoordinates'].get('coordinates')[0]}
+            Dict = {'reg_no': doc['taxi_reg_no'], 'latitude':doc['currentCoordinates'].get('coordinates')[1],'longitude':doc['currentCoordinates'].get('coordinates')[0]}
             taxi_dict.append(Dict)
         return taxi_dict
 
@@ -47,7 +47,7 @@ class TaxiSimulator:
         docs = list(taxidata)
         taxi_dict = []
         for doc in docs:
-            Dict = {'latitude':taxidata['currentCoordinates'].get('coordinates')[1],'longitude':taxidata['currentCoordinates'].get('coordinates')[0]}
+            Dict = {'reg_no':taxidata['taxi_reg_no'],'latitude':taxidata['currentCoordinates'].get('coordinates')[1],'longitude':taxidata['currentCoordinates'].get('coordinates')[0]}
             taxi_dict.append(Dict)
         return taxi_dict
 
@@ -91,8 +91,10 @@ class TaxiSimulator:
 
     def simulateSingleTaxi(self,taxiName,city):
         taxiModel = TaxiModel()
+        print(f'line 94 - {taxiName}, {city}')
         taxi_data = taxiModel.find_taxi_by_reg_no(taxiName, city)
-        self.simulateTaxiMovement(taxiName, city,taxi_data['currentCoordinates']['coordinates'][1], taxi_data['currentCoordinates']['coordinates'][0])
+        print(f'line 96 - {taxiName}, {city}')
+        self.simulateTaxiMovement(taxiName, city, taxi_data['currentCoordinates']['coordinates'][1], taxi_data['currentCoordinates']['coordinates'][0])
 
     def simulateTaxiMovement(self,reg_no,city,startLat,startLong):
         taxiModel = TaxiModel()
@@ -106,5 +108,5 @@ class TaxiSimulator:
             currentLong = currentLong + 0.001
             print(f"Moving Taxi {reg_no} is at [{currentLat}, {currentLong} ]")
             i=i+1
-            taxiModel.upsertTaxiCoords(reg_no,city,currentLat,currentLong)
+            taxiModel.upsertTaxiCoords(reg_no,currentLat,currentLong,city)
 

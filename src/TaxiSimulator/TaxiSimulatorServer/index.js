@@ -1,4 +1,7 @@
 //import { faCar } from "@fontawesome/free-solid-svg-icons";
+let taxiMarkers = {};
+let IP = "localhost";
+let PORT = "1112";
 function initMap(areadata) {
    console.log(areadata);
    const map = new google.maps.Map(document.getElementById("map"), {
@@ -25,15 +28,16 @@ function initMap(areadata) {
   taxis = setTaxisOnMap(map);
   console.log(taxis);
   for(let t=0;t<taxis.length;t++){
-    console.log("Plotting for "+taxis[t]['taxiName'])
-    plotTaxi(map,taxis[t]['taxiName'],taxis[t]['latitude'],taxis[t]['longitude'],"#000000");
+    console.log("Plotting for "+taxis[t]['reg_no'])
+    plotTaxi(map,taxis[t]['reg_no'],taxis[t]['latitude'],taxis[t]['longitude'],"#000000");
   }
 }
 
 function setUsersOnMap(map){
+var myurl = "http://"+IP+":"+PORT+"/userInitialLocations";
  $.ajax({
         type: "POST",
-        url: "http://localhost:1112/userInitialLocations",
+        url: myurl,
         contentType: 'application/json',
         data: JSON.stringify({
                "location":"Hyderabad",
@@ -69,10 +73,11 @@ function setUsersOnMap(map){
 
 function setTaxisOnMap(map){
 var result=""
+var myurl  = "http://"+IP+":"+PORT+"/taxiInitiallocations";
 $.ajax({
         async: false,
         type: "POST",
-        url: "http://localhost:1112/taxiInitiallocations",
+        url: myurl,
         contentType: 'application/json',
         data: JSON.stringify({
                "location":"Hyderabad",
@@ -82,44 +87,50 @@ $.ajax({
          dataType: 'json',
          success: function(taxidata) {
                             result=taxidata;
+                            var regNo = ''
                             console.log("got "+taxidata.length+" taxis");
                             for (let i=0; i<taxidata.length; i++){
+                            regNo = taxidata[i][`reg_no`]
                             console.log("taxi lat longs - "+taxidata[i][`latitude`]+taxidata[i][`longitude`]);
                             const image ="user.svg";
                             const iconBase ="https://developers.google.com/maps/documentation/javascript/examples/full/images/";
-                              new google.maps.Marker({
+                             const marker = new google.maps.Marker({
                                 position: { lat: taxidata[i][`longitude`], lng: taxidata[i][`latitude`] },
                                 map,
                                 icon: iconBase + "library_maps.png",
-                                /*label: {
-                                  text: "\ue530",
-                                  fontFamily: "Material Icons",
-                                  color: "#2711ed",
-                                  fontSize: "18px",
-                                },*/
-                                title: "Material Icon Font Marker",
+                                title: "Taxis in the taxiApp",
                               });
+                              taxiMarkers[regNo]= marker;
+                              console.log("regNo="+regNo+"taxiMarker="+taxiMarkers[regNo])
+                              marker.setMap(map);
                               }
                             }
         })
+        console.log("taxiMarkers = "+taxiMarkers)
         return result;
 }
+
 async function plotTaxi(map,regNo,startLat,startLang,colorCode){
   //var i=0;
   //while (i<60) {
     var newLat=startLat;
     var newLong=startLang;
    // getTaxiCoords(taxiName)
+   var myurl = "http://"+IP+":"+PORT+"/taxiCurrentLocations/";
+   console.log("beforestringify"+regNo)
+   console.log("stringifieddata- "+JSON.stringify({"reg_no":regNo}))
     $.ajax({
         type: "POST",
-        url: "http://localhost:1112/taxiCurrentLocations/",
+        url: myurl,
         contentType: 'application/json',
-        data: JSON.stringify({
-               "reg_no":regNo,
-               "location":"Hyderabad"
+         data: JSON.stringify({
+               "location":"Hyderabad",
+               "reg_no":regNo
               }),
          dataType: 'json',
         success: function(newCoords) {
+                            console.log("reg No = "+regNo)
+                            taxiMarkers[regNo].setMap(null)
                             console.log("getting taxi locations for - "+regNo);
                              newLat=newCoords[0]['latitude'];
                              newLong = newCoords[0]['longitude'];
@@ -135,7 +146,16 @@ async function plotTaxi(map,regNo,startLat,startLang,colorCode){
                                 strokeOpacity: 1.0,
                              strokeWeight: 2,
                             });
-                          taxiPath.setMap(map)
+                             taxiPath.setMap(map);
+                             const iconBase ="https://developers.google.com/maps/documentation/javascript/examples/full/images/";
+                             const marker = new google.maps.Marker({
+                                position: { lat: newLong, lng: newLat },
+                                map,
+                                icon: iconBase + "library_maps.png",
+                                title: "Taxis in the taxiApp",
+                              });
+                              taxiMarkers[regNo]=marker;
+                              marker.setMap(map);
                              }
     })
      await sleep(5000);
@@ -148,14 +168,13 @@ async function plotTaxi(map,regNo,startLat,startLang,colorCode){
 }
 
 function getTaxiCoords(regNo){
+var  myurl = "http://"+IP+":"+PORT+"/taxiCurrentLocations/";
+console.log("stringifieddata- "+JSON.stringify({"location":"Hyderabad","reg_no":regNo}))
  $.ajax({
         type: "POST",
-        url: "http://localhost:1112/taxiCurrentLocations/",
+        url: myurl,
         contentType: 'application/json',
-        data: JSON.stringify({
-               "location":"Hyderabad",
-               "reg_no":regNo
-              }),
+        data: JSON.stringify({"location":"Hyderabad","reg_no":regNo}),
          dataType: 'json',
         success: function(newCoords) {
                             console.log("getting taxi locations for - "+regNo);

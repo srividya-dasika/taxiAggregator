@@ -27,7 +27,12 @@ driver_coll = DriverModel()
 taxi_simulator = TaxiSimulator()
 #CONFIG_PATH = "../config/"
 #taxi_simulator.simulateTaxis(CONFIG_PATH+"50taxis.csv")
-taxi_simulator.simulateSingleTaxi("taxi2","Hyderabad")
+taxi_simulator.simulateSingleTaxi("AP01BX0008","Hyderabad")
+taxi_simulator.simulateSingleTaxi("AP01BX0007","Hyderabad")
+taxi_simulator.simulateSingleTaxi("AP01BX00011","Hyderabad")
+taxi_simulator.simulateSingleTaxi("AP01BX00013","Hyderabad")
+taxi_simulator.simulateSingleTaxi("AP01BX0014","Hyderabad")
+
 
 
 ################################################################################

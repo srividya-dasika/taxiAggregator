@@ -60,7 +60,7 @@ class TaxiModel:
 
         currentCoordinates = {'type': "Point", 'coordinates': [long, lat]}
         taxi_data = {'taxi_reg_no': reg_no, 'brand': brand, 'model': model, 'taxi_type': type, 'base_rate': base_rate,
-                     'vacant': vacant, 'location': currentCoordinates, 'location_name':city}
+                     'status': vacant, 'currentCoordinates': currentCoordinates, 'location_name':city}
 
         collection = self.__get_taxi_collection(city)
 
@@ -78,13 +78,13 @@ class TaxiModel:
                    {'$geoWithin':
                         {'$centerSphere': [geospacial_location['coordinates'], proximity / 6371]}}}
                             ,{'taxi_type': taxi_type}
-                            ,{'vacant':'vacant'}
+                            ,{'status':'vacant'}
                             ]}
         else:
             key = {'$and': [{'currentCoordinates':
                    {'$geoWithin':
                         {'$centerSphere': [geospacial_location['coordinates'], proximity / 6371]}}}
-                            ,{'vacant':'vacant'}
+                            ,{'status':'vacant'}
                             ]}
         print(f'getting data from collection - {collection}')
         taxiData= self._db.get_multiple_data(collection, key, search_limit)
@@ -122,8 +122,8 @@ class TaxiModel:
     def update_booking(self, city, taxi_reg_no ,from_status, to_status):
         collection = self.__get_taxi_collection(city)
         print(f'updating the taxi {taxi_reg_no} status from {from_status} to {to_status}')
-        search_key = {'taxi_reg_no': taxi_reg_no, 'vacant': from_status }
-        update_key = {"$set": {'vacant': to_status}}
+        search_key = {'taxi_reg_no': taxi_reg_no, 'status': from_status }
+        update_key = {"$set": {'status': to_status}}
         status = self._db.updateOne(collection, search_key, update_key, False)
         print(f'Found taxi status count = {status.matched_count}')
         return status.matched_count
