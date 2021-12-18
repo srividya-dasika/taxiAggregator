@@ -4,10 +4,10 @@ from taxiSimulation import TaxiSimulator
 from taxiModel import TaxiModel
 from locationService import Location
 
-app = Flask(__name__)
-CORS(app)
+application = Flask(__name__)
+CORS(application)
 # In this case, the URL route is 'userlocations'.
-@app.route('/userInitialLocations', methods = ['GET','POST'])
+@application.route('/userInitialLocations', methods = ['GET','POST'])
 def userInitiallocations():
     # Obtain the CSV data.
     taxiSim = TaxiSimulator()
@@ -24,7 +24,7 @@ def userInitiallocations():
 
 
 # In this case, the URL route is 'userlocations'.
-@app.route('/areabounds', methods = ['GET','POST'])
+@application.route('/areabounds', methods = ['GET','POST'])
 def areabounds():
     # Obtain the CSV data.
     taxiSim = TaxiSimulator()
@@ -32,7 +32,7 @@ def areabounds():
     # Forward the data to the source that called this API.
     return jsonify(l)
 
-@app.route('/taxiInitiallocations', methods = ['GET','POST'])
+@application.route('/taxiInitiallocations', methods = ['GET','POST'])
 def taxiInitialLocations():
     # Obtain the CSV data.
     taxiSim = TaxiSimulator()
@@ -47,7 +47,7 @@ def taxiInitialLocations():
     else :
         return 'Content-Type not supported!'
 
-@app.route('/taxiCurrentLocations/', methods = ['GET','POST'])
+@application.route('/taxiCurrentLocations/', methods = ['GET','POST'])
 def taxiCurrentLocations():
     sim = TaxiSimulator()
     content_type = request.headers.get('Content-Type')
@@ -60,7 +60,7 @@ def taxiCurrentLocations():
 
 
 # Obsolete
-@app.route('/gettaxilocation', methods = ['GET','POST'])
+@application.route('/gettaxilocation', methods = ['GET','POST'])
 def taxiroutes():
     # Obtain the CSV data.
     sim = TaxiSimulator
@@ -69,7 +69,7 @@ def taxiroutes():
     return jsonify(l)
 
 # Obsolete
-@app.route('/settaxicoords/<string:taxiDetails>', methods=['POST', 'PUT', 'GET'])
+@application.route('/settaxicoords/<string:taxiDetails>', methods=['POST', 'PUT', 'GET'])
 def setTaxiCoords(taxiDetails):
     taxiModel = TaxiModel()
     print("PRinting request taxiname=",taxiDetails.split('&')[0]," lat=",taxiDetails.split('&')[1],"long=",taxiDetails.split('&')[2])
@@ -78,4 +78,4 @@ def setTaxiCoords(taxiDetails):
 
 
 if __name__ == '__main__':
-    app.run(host = 'localhost', debug = True, port = 1112)
+    application.run(host = 'localhost', debug = True, port = 1112)

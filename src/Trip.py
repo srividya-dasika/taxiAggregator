@@ -4,12 +4,15 @@ import datetime
 
 class Trip():
     trip_counter = 1
-    def __init__(self, city, taxi_reg_no, customer_id):
+    def __init__(self, city, taxi_reg_no, username,driver_name,startPoint,endPoint):
         self._db = Database()
         self._latest_error = ''
         self._city = city
+        self._startPoint = startPoint
+        self._endPoint = endPoint
         self._taxi_reg_no = taxi_reg_no
-        self._customer_id =customer_id
+        self._customer_id = username
+        self._driver_name = driver_name
 
     def __inc_counter(self):
         Trip.trip_counter = Trip.trip_counter+1
@@ -19,7 +22,7 @@ class Trip():
         id = city[0:4] + '_'+ str(self.__inc_counter()) + '_'+ self._customer_id[0:5]
         return id
 
-    def __insert_trip_data(self, trip_id, hire_point, destination_point):
+    def __insert_trip_data(self, trip_id, hireLong, hireLat, destLong, destLat):
 
         obj = CollectionMapper(self._city)
         self._collection = obj.get_trip_collection_name
@@ -28,6 +31,9 @@ class Trip():
         #status = self._db.get_single_data(self._collection, key)
         #if status != None:
         #    return
+        hire_point = {'type': "Point", 'coordinates': [hireLong, hireLat]}
+        destination_point = {'type': "Point", 'coordinates': [destLong, destLat]}
+
         start_time = datetime.datetime.now()
         data = { 'trip_id':trip_id,
                   'rider_id': self._customer_id,
@@ -62,9 +68,9 @@ class Trip():
         print(f'Starting Ends {trip_id}  End time = {end_time}')
         return
 
-    def start_trip(self, city, hire_point, destination_point):
+    def start_trip(self, city, hireLong, hireLat, destLong, destLat):
         trip_id = self.__get_trip_id(city )
-        self.__insert_trip_data(trip_id,  hire_point, destination_point)
+        self.__insert_trip_data(trip_id,  hireLong, hireLat, destLong, destLat)
         return trip_id
 
     def end_trip(self, trip_id ):

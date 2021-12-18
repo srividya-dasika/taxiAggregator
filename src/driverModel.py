@@ -25,6 +25,15 @@ class DriverModel:
         else:
             return driver_doc
 
+    def finddrivername_by_taxiregno(self, reg_no):
+        key = {'taxi_reg_no': reg_no}
+        driver_doc = self.__find(key)
+        if driver_doc == None:
+            self._latest_error = f'Driver associated with taxi({reg_no}) does not exist in Driver collection'
+            return -1
+        else:
+            return driver_doc["drivername"]
+
     # Since Phonenumber should be unique in drivers collection, this provides a way to fetch the driver document based on the drivername
     def find_by_driver_mob_no(self, phoneNo):
         key = {'phoneNo': phoneNo}
@@ -68,10 +77,18 @@ class DriverModel:
         print(f'Registered driver {drivername} app')
         return self.find_by_object_id(driver_obj_id)
 
+    def update_status(self, drivername ,from_status, to_status):
+        print(f'updating the driver {drivername} status from {from_status} to {to_status}')
+        search_key = {'drivername': drivername, 'onTrip': from_status }
+        update_key = {"$set": {'onTrip': to_status}}
+        status = self._db.updateOne(self.DRIVER_COLLECTION,search_key, update_key, False)
+        #print(f'Found taxi status count = {status.matched_count}')
+        return status.matched_count
+
 
 class Driver:
-    def __init__(self, drivername,cabid):
-        self.drivername = drivername
+    def __init__(self):
+        self.driver_model = DriverModel()
 
     def login(self,username): #check if user exists in db and if so , login successfully
         return 1
@@ -84,4 +101,15 @@ class Driver:
         #  Wait till a taxi is allotted.
         #  Then change user status to riding
         print(self.drivername," accepted the request from ",username)
+
+    def updateDriverStatus(self, driverName, taxi_reg_no, from_status, to_status):
+        ############## Send SNS to User
+        if driverName=="":
+            driverName = self.driver_model.finddrivername_by_taxiregno(taxi_reg_no)
+            print(f'got driver - {driverName} for taxi - {taxi_reg_no}')
+        status_count = self.driver_model.update_status(driverName, from_status, to_status)
+        if status_count == 0: return -1
+        else:
+            return driverName
+
 

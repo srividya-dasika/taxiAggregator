@@ -1,7 +1,7 @@
 class Location:
 
 
-    def __init__(self,type,city,startLat,startLong,endLat=0,endLong=0):
+    def __init__(self,type,city,startLong,startLat,endLat=0,endLong=0):
         self.type = type
         self.startLat = startLat
         self.startLong = startLong
