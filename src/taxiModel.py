@@ -28,7 +28,7 @@ class TaxiModel:
         return self._latest_error
 
     # Since taxi reg no should be unique in taxis collection, this provides a way to fetch the taxi document based on the taxi reg no
-    def find_taxi_by_reg_no(self,city, reg_no):
+    def find_taxi_by_reg_no(self,reg_no, city):
         collection = self.__get_taxi_collection(city)
         print("querying for taxi - "+reg_no)
         key = {'taxi_reg_no': reg_no}
@@ -93,7 +93,7 @@ class TaxiModel:
         taxi_dict = []
         print("Taxis data:", docs)
         for doc in docs:
-           Dict = {'taxiName': doc['reg_no'], 'latitude': doc['currentCoordinates'].get('coordinates')[0],
+           Dict = {'taxiName': doc['taxi_reg_no'], 'latitude': doc['currentCoordinates'].get('coordinates')[0],
                 'longitude': doc['currentCoordinates'].get('coordinates')[1]}
            taxi_dict.append(Dict)
         return taxi_dict
@@ -122,7 +122,7 @@ class TaxiModel:
     def update_booking(self, city, taxi_reg_no ,from_status, to_status):
         collection = self.__get_taxi_collection(city)
         print(f'updating the taxi {taxi_reg_no} status from {from_status} to {to_status}')
-        search_key = {'reg_no': taxi_reg_no, 'vacant': from_status }
+        search_key = {'taxi_reg_no': taxi_reg_no, 'vacant': from_status }
         update_key = {"$set": {'vacant': to_status}}
         status = self._db.updateOne(collection, search_key, update_key, False)
         print(f'Found taxi status count = {status.matched_count}')

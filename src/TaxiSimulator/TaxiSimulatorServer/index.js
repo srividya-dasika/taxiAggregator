@@ -37,8 +37,8 @@ function setUsersOnMap(map){
         contentType: 'application/json',
         data: JSON.stringify({
                "location":"Hyderabad",
-               "currentLat":78.8989,
-               "currentLong":17.9090
+               "currentLat":17.3850,
+               "currentLong":78.4867
               }),
          dataType: 'json',
         success: function(userdata) {
@@ -76,8 +76,8 @@ $.ajax({
         contentType: 'application/json',
         data: JSON.stringify({
                "location":"Hyderabad",
-               "currentLat":78.8989,
-               "currentLong":17.9090
+               "currentLat":17.3850,
+               "currentLong":78.4867
               }),
          dataType: 'json',
          success: function(taxidata) {
@@ -115,8 +115,8 @@ async function plotTaxi(map,regNo,startLat,startLang,colorCode){
         url: "http://localhost:1112/taxiCurrentLocations/",
         contentType: 'application/json',
         data: JSON.stringify({
-               "location":"Hyderabad",
-               "reg_no":regNo
+               "reg_no":regNo,
+               "location":"Hyderabad"
               }),
          dataType: 'json',
         success: function(newCoords) {
@@ -138,7 +138,7 @@ async function plotTaxi(map,regNo,startLat,startLang,colorCode){
                           taxiPath.setMap(map)
                              }
     })
-     await sleep(1000);
+     await sleep(5000);
      plotTaxi(map,regNo,newLat,newLong,colorCode);
     //i++;
 

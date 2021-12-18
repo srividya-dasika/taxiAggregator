@@ -36,7 +36,7 @@ class TaxiSimulator:
         taxi_dict = []
         print("Taxis data:", docs)
         for doc in docs:
-            Dict = {'taxiName': doc['reg_no'], 'latitude':doc['currentCoordinates'].get('coordinates')[1],'longitude':doc['currentCoordinates'].get('coordinates')[0]}
+            Dict = {'taxiName': doc['taxi_reg_no'], 'latitude':doc['currentCoordinates'].get('coordinates')[1],'longitude':doc['currentCoordinates'].get('coordinates')[0]}
             taxi_dict.append(Dict)
         return taxi_dict
 
