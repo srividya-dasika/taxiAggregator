@@ -5,13 +5,13 @@ import random
 import csv
 
 class TaxiRegistration:
-    NUMBER_OF_USERS = 30
+    NUMBER_OF_USERS = 300
 
     #def __init__(self):
 
     taxi_data = []
     def generate_taxi_details(self, loc_name):
-        with open('../TaxiSimulator/TaxiSimulatorClient/taxi_reg_hyd.csv', 'w', newline='') as csvfile:
+        with open('TaxiSimulator/TaxiSimulatorClient/taxi_reg_hyd.csv', 'w', newline='') as csvfile:
             taxi_brand = {'Luxury': ['Audi', 'BMW', 'Jaguar', 'Mercedes'],
                           'Deluxe': ['Ecosport', 'skoda', 'Ciaz'],
                           'Basic': ['Zen', 'Tiago', 'Sonet']
@@ -44,7 +44,7 @@ class TaxiRegistration:
                               'taxi_type': taxi_type,
                               'base_rate' : base_rate,
                               'vacant': vacant,
-                              'location': {
+                              'currentCoordinates': {
                                   'type': "Point",
                                   'coordinates': [long, lat]},
                               'location_name': loc_name})

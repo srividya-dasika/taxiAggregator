@@ -13,10 +13,11 @@ class UserSimulation:
         user1.requestTaxi('All')
 
     def simulateBookTaxi(self, user, taxi_type):
-
         taxi_list  = user.requestTaxi(taxi_type)
-
         returned_list =[]
+        if taxi_list == None:
+            print('No taxis found')
+            return
         if len(list(taxi_list.clone())) == 0:
             print(f'No taxis found in proximity')
             return
@@ -30,7 +31,7 @@ class UserSimulation:
 
         city = selected_Taxi['location_name']
         taxi_reg_no = selected_Taxi['taxi_reg_no']
-        taxi_coord = selected_Taxi['location']
+        taxi_coord = selected_Taxi['currentCoordinates']
         user_coord = user.get_user_location
 
         # First move to user location

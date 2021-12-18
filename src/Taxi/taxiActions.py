@@ -18,33 +18,12 @@ class Taxi:
         #  Wait till a taxi is allotted.
         #  Then change user status to riding
         print("Fetching taxis in", self.proximityRadius, "km radius for",username)
-        #try:
         obj_serv = ServiceArea()
         within_service_area = obj_serv.validate_service_area(userLocation)
-
         if within_service_area:
-
-            #Mongoquery to get all nearby taxis.
-
             return self.taxi_model.find_by_proximity( userLocation, self.proximityRadius, self.searchResultLimit, taxi_type)
-
-            #print((taxi_list))
-            '''
-            taxi_list = self.taxi_model.find_by_proximity(userLocation, self.proximityRadius, self.searchResultLimit,
-                                                          taxi_type)
-            if len(list(taxi_list.clone())) == 0:
-                print(f'No taxis found in {self.proximityRadius} km radius')
-                return -1
-            for taxi in taxi_list:
-                print(taxi)
-            
-            return taxi_list
-            '''
-        #except:
         else:
             print('Error: Either city name is incorrect or user location is not in our service area')
-
-
 
     def updateTaxiStatus(self,city, taxi_reg_no, taxi_current_coord, taxi_dest_coord ,status):
 
