@@ -4,6 +4,7 @@
 import threading
 from userModel import Users
 from locationService import Location
+from taxiModel import  Taxi
 
 class UserSimulation:
 
@@ -27,15 +28,28 @@ class UserSimulation:
 
         selected_Taxi = returned_list[0]
         print('\nUser request for ',selected_Taxi)
-        user_location = user.get_user_location()
 
         city = selected_Taxi['location_name']
         taxi_reg_no = selected_Taxi['taxi_reg_no']
-        taxi_coord = selected_Taxi['currentCoordinates']
-        user_coord = user.get_user_location
+        taxi_coord = selected_Taxi['currentCoordinates']['coordinates']
+        user_coord = user.get_user_location()
 
         # First move to user location
-        user.confirmTaxiBooking( city, taxi_reg_no, taxi_coord, user_coord)
+        status = user.confirmTaxiBooking( city, taxi_reg_no, taxi_coord, user_coord)
+        if status == 1:
+            print(f'Booked taxi {taxi_reg_no}.. Taxi will arrive at your location{user_coord} soon')
+        else:
+            print(f'Booking could not be confirmed. Please try booking again')
+
+        #Simulate taxi action also
+        taxi_obj = Taxi()
+        trip_id = taxi_obj.startTrip(city,taxi_reg_no,'9876543210', taxi_coord, user_coord )
+        taxi_obj.endTrip(trip_id)
+
+
+        status = user.confirmTripCompletion( city, taxi_reg_no, user_coord, user_coord)
+        print("Taxi completed the trip and is back to vacant status")
+
 
 
     def simulateMultiUserRequest(self):
