@@ -74,11 +74,20 @@ class UserModel:
             range_query = {'currentCoordinates': SON([("$near", geospacial_location), ("$maxDistance", proximity)])}
             return self._db.get_multiple_data(collection, range_query, search_limit)
 
+    def update_status(self, username ,from_status, to_status):
+        print(f'updating the user {username} status from {from_status} to {to_status}')
+        search_key = {'username': username, 'onTrip': from_status }
+        update_key = {"$set": {'onTrip': to_status}}
+        status = self._db.updateOne(self.USER_COLLECTION,search_key, update_key, False)
+        #print(f'Found taxi status count = {status.matched_count}')
+        return status.matched_count
+
 class Users:
 
     def __init__(self, username, userLocation):
         self.username = username
         self._location = userLocation
+        self.user_model = UserModel()
 
     def get_user_location(self):
         return self._location['coordinates']
@@ -113,6 +122,14 @@ class Users:
 
     def checkDriverAvailability(self, Taxi):
         return True
+
+    def updateUserStatus(self, username, taxi_reg_no, from_status, to_status):
+        ############## Send SNS to User
+        status_count = self.user_model.update_status(username, from_status, to_status)
+        if status_count == 0: return -1
+        else:
+            return username
+
 
 
 

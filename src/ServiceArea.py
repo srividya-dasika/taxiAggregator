@@ -46,7 +46,7 @@ class ServiceArea:
     def validate_service_area(self, userlocation):
 
         service_city = self.find_service_area(userlocation)
-        if userlocation['city'].lower() == service_city.lower():
+        if userlocation['city'] == service_city:
             return True
         else:
             print('Selected city', userlocation['city'], 'or the selected coordinate ',userlocation['coordinates'] ,'is not within service area')

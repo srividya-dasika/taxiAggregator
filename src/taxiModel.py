@@ -6,6 +6,7 @@ from pymongo import GEOSPHERE
 from CollectionMap import CollectionMapper
 from ServiceArea import ServiceArea
 from Trip import Trip
+
 # Taxi document contains reg no (String), brand (String), model (String), type (String) and currentLocation (GeoJSON)fields
 class TaxiModel:
     TAXI_COLLECTION = 'taxi_location'
@@ -118,12 +119,13 @@ class TaxiModel:
         return self._db.get_single_data(collection, key)
 
     # Find the taxi with that registration number and with that 'from_status' and update that to 'to_status'
-    def update_booking(self, city, taxi_reg_no, taxi_coord, user_coord ,from_status, to_status):
+    def update_booking(self, city, taxi_reg_no ,from_status, to_status):
         collection = self.__get_taxi_collection(city)
-
-        search_key = {'taxi_reg_no': taxi_reg_no, 'vacant': from_status }
+        print(f'updating the taxi {taxi_reg_no} status from {from_status} to {to_status}')
+        search_key = {'reg_no': taxi_reg_no, 'vacant': from_status }
         update_key = {"$set": {'vacant': to_status}}
         status = self._db.updateOne(collection, search_key, update_key, False)
+        print(f'Found taxi status count = {status.matched_count}')
         return status.matched_count
 
 
@@ -154,12 +156,12 @@ class Taxi:
             print('Error: Either city name is incorrect or user location is not in our service area')
             return -1
 
-    def updateTaxiStatus(self, city, taxi_reg_no, taxi_current_coord, taxi_dest_coord, from_status, to_status):
-
+    def updateTaxiStatus(self, city, username, taxi_reg_no, from_status, to_status):
         ############## Send SNS to taxi
         ############## Send SNS to User
-
-        return self.taxi_model.update_booking(city, taxi_reg_no, taxi_current_coord, taxi_dest_coord, from_status, to_status)
+        status_count =  self.taxi_model.update_booking(city, taxi_reg_no, from_status, to_status)
+        if status_count == 0: return -1
+        else: return taxi_reg_no
 
     def startTrip(self, city, taxi_reg_no, customer_phone_no,taxi_current_coord,  taxi_dest_coord):
         self.trip_obj = Trip(city, taxi_reg_no, customer_phone_no)
