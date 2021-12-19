@@ -65,7 +65,7 @@ class UserModel:
             'phoneNo': phoneNo,
             'city': city,
             'onTrip':onTrip,
-            'location': currentCoordinates
+            'currentCoordinates': currentCoordinates
         }
         user_obj_id = self._db.insert_single_data(UserModel.USER_COLLECTION, user_data)
         return self.find_by_object_id(user_obj_id)
