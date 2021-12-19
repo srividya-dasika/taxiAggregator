@@ -130,7 +130,7 @@ class TaxiModel:
 
 
 class Taxi:
-    proximityRadius = 8  # assuming proximity factor as 3 kms.
+    proximityRadius = 8000  # assuming proximity factor as 3 kms.
     searchResultLimit = 5  # limit the number of search results
 
     def __init__(self, reg_no=0):

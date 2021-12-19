@@ -3,7 +3,7 @@ from pymongo import MongoClient, GEOSPHERE
 
 
 class Database:
-    HOST = '18.205.189.178'
+    HOST = '54.234.37.90'
     PORT = '27017'
     DB_NAME = 'TaxiApp_DB'
 

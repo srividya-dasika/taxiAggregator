@@ -1,11 +1,11 @@
 # Imports MongoClient for base level access to the local MongoDB
-from pymongo import MongoClient
+from pymongo import MongoClient, GEOSPHERE
 # Imports datetime class to create timestamp for weather data storage
 
 
 # Database host ip and port information
 
-HOST = '127.0.0.1'
+HOST = '54.234.37.90'
 PORT = '27017'
 
 RELATIVE_CONFIG_PATH = '../config/'
@@ -16,10 +16,10 @@ DRIVER_COLLECTION = 'drivers'
 TAXI_COLLECTION = 'taxis'
 LOCATION_COLLECTION = 'device_access'
 # This will initiate connection to the mongodb
-db_handle = MongoClient(f'mongodb://{HOST}:{PORT}')
-
+#db_handle = MongoClient(f'mongodb://{HOST}:{PORT}')
+db_handle = MongoClient(f'mongodb://taxiAppUser:Test1234@{HOST}:{PORT}/?authSource={DB_NAME}&authMechanism=SCRAM-SHA-1')
 # We drop the existing database including all the collections and data
-db_handle.drop_database(DB_NAME)
+#db_handle.drop_database(DB_NAME)
 
 # We recreate the database with the same name
 taxi_dbh = db_handle[DB_NAME]
@@ -36,8 +36,8 @@ with open(RELATIVE_CONFIG_PATH+USER_COLLECTION+'.csv', 'r') as user_fh:
     for user_row in user_fh:
         user_row = user_row.rstrip()
         if user_row:
-            (username, email, joinedDate, gender, phoneNo, city, currentLat, currentLong) = user_row.split(',')
-        currentCoordinates = {'type': "Point",'coordinates': [currentLat, currentLong]}
+            (username, email, joinedDate, gender, phoneNo, city,onTrip, currentLong, currentLat) = user_row.split(',')
+        currentCoordinates = {'type': "Point",'coordinates': [float(currentLong), float(currentLat)]}
         user_data = {
                         'username': username,
                         'email': email,
@@ -45,16 +45,17 @@ with open(RELATIVE_CONFIG_PATH+USER_COLLECTION+'.csv', 'r') as user_fh:
                         'gender':gender,
                         'phoneNo':phoneNo,
                         'city':city,
+                        'onTrip':onTrip,
                         'currentCoordinates':currentCoordinates
                     }
-
+        print(f'{user_data}')
         # This inserts the data item as a document in the user collection
         user_collection.insert_one(user_data)
 
 
 ## Driver document contains Driver name (String), current_cab_id (String), joinedDate (String)
 ## Reads driver.csv one line at a time, splits them into the data fields and inserts
-
+'''
 # This creates and return a pointer to the devices collection
 driver_collection = taxi_dbh[DRIVER_COLLECTION]
 driver_collection.delete_many({})
@@ -66,7 +67,7 @@ with open(RELATIVE_CONFIG_PATH+DRIVER_COLLECTION+'.csv', 'r') as driver_fh:
         device_data = {'driverName': driverName, 'currentCabId': currentCabId, 'joinedDate': joinedDate}
 
         # This inserts the data item as a document in the devices collection
-        driver_collection.insert_one(device_data)
+       # driver_collection.insert_one(device_data)
 
 
 ##Taxi collection to hold all the taxi information whihc are registerd with the TaxiApp
@@ -82,5 +83,6 @@ with open(RELATIVE_CONFIG_PATH+TAXI_COLLECTION+'.csv','r') as taxis_fh:
         taxi_data = {'reg_no': reg_no, 'brand': brand,'model': model, 'type':type, 'base_rate':base_rate, 'vacant':vacant, 'currentCoordinates':currentCoordinates }
 
         #inserting data item as a document in device access collection
-        taxi_collection.insert_one(taxi_data)
+       # taxi_collection.insert_one(taxi_data)
+       '''
 
