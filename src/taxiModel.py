@@ -52,7 +52,7 @@ class TaxiModel:
     def insertNewTaxi(self, reg_no, brand, model, type, base_rate,  vacant, lat,long, city):
         self._latest_error = ''
         print("Inserting data for New Taxi with reg_no - "+reg_no+" to Taxis Collection....")
-        taxis_document = self.find_taxi_by_reg_no(city,reg_no)
+        taxis_document = self.find_taxi_by_reg_no(reg_no, city)
 
         if (taxis_document != None):
             print(f'Taxi with Regd No-  {reg_no} already exists')
