@@ -47,7 +47,7 @@ class UserModel:
 
     # This first checks if a user already exists with that username. If it does, it populates latest_error and returns -1
     # If a user doesn't already exist, it'll insert a new document and return the same to the caller
-    def insertNewUser(self, username, email, joinedDate, gender, phoneNo, city,onTrip, currentLat, currentLong):
+    def insertNewUser(self, username, email, joinedDate, gender, phoneNo, city, currentLat, currentLong,onTrip = False,):
         print("Inserting New User - "+username)
         self._latest_error = ''
         user_document = self.find_by_username(username)
