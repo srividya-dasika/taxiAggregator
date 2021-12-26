@@ -90,5 +90,5 @@ class UserSimulation:
         # both threads completely executed
         print("Done!")
 
-d= UserSimulation()
-d.simulateMultiUserRequest()
+#d= UserSimulation()
+#d.simulateMultiUserRequest()

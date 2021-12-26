@@ -28,7 +28,7 @@ class TaxiModel:
         return self._latest_error
 
     # Since taxi reg no should be unique in taxis collection, this provides a way to fetch the taxi document based on the taxi reg no
-    def find_taxi_by_reg_no(self,city, reg_no):
+    def find_taxi_by_reg_no(self,reg_no, city):
         collection = self.__get_taxi_collection(city)
         print("querying for taxi - "+reg_no)
         key = {'taxi_reg_no': reg_no}
@@ -52,7 +52,7 @@ class TaxiModel:
     def insertNewTaxi(self, reg_no, brand, model, type, base_rate,  vacant, lat,long, city):
         self._latest_error = ''
         print("Inserting data for New Taxi with reg_no - "+reg_no+" to Taxis Collection....")
-        taxis_document = self.find_taxi_by_reg_no(city,reg_no)
+        taxis_document = self.find_taxi_by_reg_no(reg_no, city)
 
         if (taxis_document != None):
             print(f'Taxi with Regd No-  {reg_no} already exists')
@@ -60,7 +60,7 @@ class TaxiModel:
 
         currentCoordinates = {'type': "Point", 'coordinates': [long, lat]}
         taxi_data = {'taxi_reg_no': reg_no, 'brand': brand, 'model': model, 'taxi_type': type, 'base_rate': base_rate,
-                     'vacant': vacant, 'location': currentCoordinates, 'location_name':city}
+                     'status': vacant, 'currentCoordinates': currentCoordinates, 'location_name':city}
 
         collection = self.__get_taxi_collection(city)
 
@@ -78,13 +78,13 @@ class TaxiModel:
                    {'$geoWithin':
                         {'$centerSphere': [geospacial_location['coordinates'], proximity / 6371]}}}
                             ,{'taxi_type': taxi_type}
-                            ,{'vacant':'vacant'}
+                            ,{'status':'vacant'}
                             ]}
         else:
             key = {'$and': [{'currentCoordinates':
                    {'$geoWithin':
                         {'$centerSphere': [geospacial_location['coordinates'], proximity / 6371]}}}
-                            ,{'vacant':'vacant'}
+                            ,{'status':'vacant'}
                             ]}
         print(f'getting data from collection - {collection}')
         taxiData= self._db.get_multiple_data(collection, key, search_limit)
@@ -93,7 +93,7 @@ class TaxiModel:
         taxi_dict = []
         print("Taxis data:", docs)
         for doc in docs:
-           Dict = {'taxiName': doc['reg_no'], 'latitude': doc['currentCoordinates'].get('coordinates')[0],
+           Dict = {'taxiName': doc['taxi_reg_no'], 'latitude': doc['currentCoordinates'].get('coordinates')[0],
                 'longitude': doc['currentCoordinates'].get('coordinates')[1]}
            taxi_dict.append(Dict)
         return taxi_dict
@@ -122,15 +122,15 @@ class TaxiModel:
     def update_booking(self, city, taxi_reg_no ,from_status, to_status):
         collection = self.__get_taxi_collection(city)
         print(f'updating the taxi {taxi_reg_no} status from {from_status} to {to_status}')
-        search_key = {'reg_no': taxi_reg_no, 'vacant': from_status }
-        update_key = {"$set": {'vacant': to_status}}
+        search_key = {'taxi_reg_no': taxi_reg_no, 'status': from_status }
+        update_key = {"$set": {'status': to_status}}
         status = self._db.updateOne(collection, search_key, update_key, False)
         print(f'Found taxi status count = {status.matched_count}')
         return status.matched_count
 
 
 class Taxi:
-    proximityRadius = 8  # assuming proximity factor as 3 kms.
+    proximityRadius = 8000  # assuming proximity factor as 3 kms.
     searchResultLimit = 5  # limit the number of search results
 
     def __init__(self, reg_no=0):

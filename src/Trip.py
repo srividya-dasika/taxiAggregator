@@ -1,5 +1,6 @@
 from database import Database
 from CollectionMap import CollectionMapper
+from sendNotification import SendNotifications
 import datetime
 
 class Trip():
@@ -71,6 +72,9 @@ class Trip():
     def start_trip(self, city, hireLong, hireLat, destLong, destLat):
         trip_id = self.__get_trip_id(city )
         self.__insert_trip_data(trip_id,  hireLong, hireLat, destLong, destLat)
+        sns = SendNotifications()
+        sns.sendNotification("Hello! You are riding with Customer-"+self._customer_id+". Trip started with id-"+trip_id,"Taxi App - Trip Start Message -Driver","driver")
+        sns.sendNotification("Hello! You are riding with Customer-"+self._driver_name+".Trip started with "+trip_id,"Taxi App - Trip Start Message - User","user")
         return trip_id
 
     def end_trip(self, trip_id ):

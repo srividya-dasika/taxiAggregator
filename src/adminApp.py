@@ -18,7 +18,7 @@ def createUser():
         user_dict = request.json
         print("name=",user_dict['username'])
         user_add = user_coll.insertNewUser(user_dict['username'], user_dict['email'], user_dict['joinedDate'],user_dict['gender'], user_dict['mobileNumber'],
-                                user_dict['location'] , user_dict['latitude'],user_dict['longitude'])
+                                user_dict['location'] ,user_dict['latitude'],user_dict['longitude'],user_dict['onTrip'])
         if user_add == -1:
             return "User already exists!"
         else:

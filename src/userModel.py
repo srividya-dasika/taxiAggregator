@@ -47,7 +47,7 @@ class UserModel:
 
     # This first checks if a user already exists with that username. If it does, it populates latest_error and returns -1
     # If a user doesn't already exist, it'll insert a new document and return the same to the caller
-    def insertNewUser(self, username, email, joinedDate, gender, phoneNo, city, currentLat, currentLong):
+    def insertNewUser(self, username, email, joinedDate, gender, phoneNo, city, currentLat, currentLong,onTrip = False,):
         print("Inserting New User - "+username)
         self._latest_error = ''
         user_document = self.find_by_username(username)
@@ -64,7 +64,8 @@ class UserModel:
             'gender': gender,
             'phoneNo': phoneNo,
             'city': city,
-            'location': currentCoordinates
+            'onTrip':onTrip,
+            'currentCoordinates': currentCoordinates
         }
         user_obj_id = self._db.insert_single_data(UserModel.USER_COLLECTION, user_data)
         return self.find_by_object_id(user_obj_id)
@@ -91,6 +92,11 @@ class Users:
 
     def get_user_location(self):
         return self._location['coordinates']
+
+    def get_user_currentCoordinates(self,username):
+        user = self.user_model.find_by_username(username)
+        if user == -1: return -1
+        else: return user['currentCoordinates']
 
     def login(self, username):  # check if user exists in db and if so , login successfully
         return 1

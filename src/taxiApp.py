@@ -18,7 +18,9 @@ def requestTaxi():
     content_type = request.headers.get('Content-Type')
     if content_type == 'application/json':
         taxi_request_dict = request.json
-        userLocation = Location("Point", taxi_request_dict['location'],taxi_request_dict['currentLong'], taxi_request_dict['currentLat'])
+        user = Users(taxi_request_dict['userName'], taxi_request_dict['location'])
+        userLoc = user.get_user_currentCoordinates(taxi_request_dict['userName'])
+        userLocation = Location("Point", taxi_request_dict['location'],userLoc['coordinates'][0], userLoc['coordinates'][1])
         taxi_list = taxis.getNearestTaxis(taxi_request_dict['userName'],userLocation.current_loc,taxi_request_dict['taxiType'])
         if taxi_list==-1:
             return "Error: Either city name is incorrect or user location is not in our service area"
