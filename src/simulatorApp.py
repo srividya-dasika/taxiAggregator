@@ -16,7 +16,7 @@ def userInitiallocations():
         area_dict = request.json
         currentArea = Location("Point", area_dict['location'], area_dict['currentLat'], area_dict['currentLong']
                                 )
-        userlocationsList = taxiSim.getInitialUserLocations(currentArea.current_loc,100000,10)
+        userlocationsList = taxiSim.getInitialUserLocations(currentArea.current_loc,100000000,10)
         # Forward the data to the source that called this API.
         return jsonify(userlocationsList)
     else :

@@ -6,6 +6,8 @@ from pymongo import GEOSPHERE
 from CollectionMap import CollectionMapper
 from ServiceArea import ServiceArea
 from Trip import Trip
+from multipledispatch import dispatch
+
 
 # Taxi document contains reg no (String), brand (String), model (String), type (String) and currentLocation (GeoJSON)fields
 class TaxiModel:
@@ -105,12 +107,22 @@ class TaxiModel:
         range_query = {'currentCoordinates': SON([("$near", geospacial_location), ("$maxDistance", proximity)])}
         return self._db.get_multiple_data(collection, range_query, search_limit)
 
+    @dispatch(str, float, float, str)
     def upsertTaxiCoords(self,reg_no,lat,long, city):
         print("Upserting Taxi Coords")
         collection = self.__get_taxi_collection(city)
         filter = {'taxi_reg_no':reg_no}
         currentCoordinates = {'type': "Point", 'coordinates': [long, lat]}
         record = {'taxi_reg_no': reg_no, 'currentCoordinates': currentCoordinates}
+        self._db.upsertData(collection,filter,record)
+
+    #overloading the above method
+    @dispatch(str, dict, int)
+    def upsertTaxiCoords(self,reg_no,point , city):
+        print("Upserting Taxi Coords")
+        collection = self.__get_taxi_collection(city)
+        filter = {'taxi_reg_no':reg_no}
+        record = {'taxi_reg_no': reg_no, 'currentCoordinates': point}
         self._db.upsertData(collection,filter,record)
 
     def get_taxi_details(self, reg_no, city):

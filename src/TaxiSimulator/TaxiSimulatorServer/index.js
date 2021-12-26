@@ -41,8 +41,8 @@ var myurl = "http://"+IP+":"+PORT+"/userInitialLocations";
         contentType: 'application/json',
         data: JSON.stringify({
                "location":"Hyderabad",
-               "currentLat":17.3850,
-               "currentLong":78.4867
+               "currentLat":78.4867,
+               "currentLong":17.3850
               }),
          dataType: 'json',
         success: function(userdata) {
@@ -54,7 +54,7 @@ var myurl = "http://"+IP+":"+PORT+"/userInitialLocations";
                            const iconBase ="https://developers.google.com/maps/documentation/javascript/examples/full/images/";
                         new google.maps.Marker({
                                 /* position: { lat: 17.4909, lng: 78.4990 },*/
-                                    position: {lat:userdata[i][`longitude`], lng:userdata[i][`latitude`]},
+                                    position: {lat:userdata[i][`latitude`], lng:userdata[i][`longitude`]},
                                       map,
                                       /*label: {
                                                  text: "\ue530",

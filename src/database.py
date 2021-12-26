@@ -9,9 +9,15 @@ class Database:
 
     def __init__(self):
        # uri = "mongodb://user:password@example.com/?authSource=the_database&authMechanism=SCRAM-SHA-1"
-
-        self._db_conn = MongoClient(f'mongodb://taxiAppUser:Test1234@{Database.HOST}:{Database.PORT}/?authSource={Database.DB_NAME}&authMechanism=SCRAM-SHA-1')
-        self._db = self._db_conn[Database.DB_NAME]
+       configFile = open("Config.txt", "r")
+       for line in configFile.readlines():
+           x = line.split("=")
+           if x[0] == "db_host_ip":
+               self.HOST = x[1][:-1]
+           if x[0] == "db_host_port":
+               self.PORT = x[1][:-1]
+       self._db_conn = MongoClient(f'mongodb://taxiAppUser:Test1234@{Database.HOST}:{Database.PORT}/?authSource={Database.DB_NAME}&authMechanism=SCRAM-SHA-1')
+       self._db = self._db_conn[Database.DB_NAME]
 
 
         #self._db_conn = MongoClient("mongodb+srv://test:test@cluster0.5dwwl.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
@@ -67,8 +73,8 @@ class Database:
 
     def get_multiple_data(self, collection, key, search_limit):
         db_collection = self._db[collection]
-        print(f'creating index on {collection}')
-        db_collection.create_index([('currentCoordinates', GEOSPHERE)])
+        #the index is being created from DB interface for now.
+        #self.create_index(collection,'currentCoordinates',GEOSPHERE)
         print(f'querying for {key} with limit {search_limit}')
         records = db_collection.find(key).limit(search_limit)
         i=0
@@ -76,4 +82,9 @@ class Database:
             i=i+1
         print(f'Count of records received = {i}')
         return db_collection.find(key).limit(search_limit)
+
+    def create_index(self,collection,field,indexType):
+        db_collection = self._db[collection]
+        print(f'creating index on {collection}')
+        db_collection.create_index([(field, indexType)])
 

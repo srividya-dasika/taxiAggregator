@@ -43,6 +43,7 @@ def selectTaxi():
         userName = user.updateUserStatus(selected_taxi_dict["user_name"],selected_taxi_dict['taxi_reg_no'],False,True)
         driverName = driver.updateDriverStatus("",selected_taxi_dict['taxi_reg_no'],False,True)
         taxiRegNo = taxi.updateTaxiStatus(selected_taxi_dict["city"],selected_taxi_dict["user_name"],selected_taxi_dict['taxi_reg_no'],"vacant","booked")
+        print(f'if userName = {userName} or driverName = {driverName} or taxiRegNo = {taxiRegNo}')
         if userName == -1 or driverName ==-1 or taxiRegNo == -1:
             return f'Something went wrong, could not select the taxi for user. Please try again later...'
         else:
@@ -65,6 +66,22 @@ def startTrip():
             return f'Trip could not start because of some error..please try in some time.'
         else:
             return f'Trip with id - {trip_id} started successfully...enjoy your trip!'
+    else:
+        return 'Content-Type not supported!'
+
+@application.route('/endTrip', methods=['POST', 'GET'])
+def endTrip():
+    content_type = request.headers.get('Content-Type')
+    if content_type == 'application/json':
+        trip_dict = request.json
+        currentCoordinates = Location("Point", trip_dict['city'],trip_dict['currentLong'], trip_dict['currentLat'])
+        trip_id = trip_dict['trip_id']
+        trip = Trip(trip_id)
+        end_status = trip.end_trip(trip_dict['city'], trip_id)
+        if end_status == -1:
+            return f'Trip end status could not be updated because of some error..please try in some time.'
+        else:
+            return f'Trip with id - {trip_id} ended ...Thanks for your trip!'
     else:
         return 'Content-Type not supported!'
 

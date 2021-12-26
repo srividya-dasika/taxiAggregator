@@ -1,0 +1,4 @@
+db_host_ip=54.234.37.90
+db_host_port=27017
+sns_arn_driver=arn:aws:sns:us-east-1:160643791587:driverTopic
+sns_arn_user=arn:aws:sns:us-east-1:160643791587:userTopic
