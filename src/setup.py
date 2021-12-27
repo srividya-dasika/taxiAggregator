@@ -1,3 +1,6 @@
+'''
+Setup the initial set of data - in the taxi,user and driver collections.
+'''
 # Imports MongoClient for base level access to the local MongoDB
 from pymongo import MongoClient, GEOSPHERE
 # Imports datetime class to create timestamp for weather data storage
@@ -55,7 +58,6 @@ with open(RELATIVE_CONFIG_PATH+USER_COLLECTION+'.csv', 'r') as user_fh:
 
 ## Driver document contains Driver name (String), current_cab_id (String), joinedDate (String)
 ## Reads driver.csv one line at a time, splits them into the data fields and inserts
-'''
 # This creates and return a pointer to the devices collection
 driver_collection = taxi_dbh[DRIVER_COLLECTION]
 driver_collection.delete_many({})
@@ -84,5 +86,3 @@ with open(RELATIVE_CONFIG_PATH+TAXI_COLLECTION+'.csv','r') as taxis_fh:
 
         #inserting data item as a document in device access collection
        # taxi_collection.insert_one(taxi_data)
-       '''
-

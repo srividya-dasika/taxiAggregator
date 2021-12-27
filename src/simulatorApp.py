@@ -1,3 +1,7 @@
+'''
+The taxi simulator app APIs
+This files serves as the backend service for the UI Simulation of Users,Taxis and TaxiMovement via the Google Maps integration.
+'''
 from flask_cors import CORS
 from flask import Flask, jsonify, request
 from taxiSimulation import TaxiSimulator
@@ -6,6 +10,7 @@ from locationService import Location
 
 application = Flask(__name__)
 CORS(application)
+# API to fetch the initial user locations. It returns all the users in the DB as of now. Can be extended to users in a specific area in future
 # In this case, the URL route is 'userlocations'.
 @application.route('/userInitialLocations', methods = ['GET','POST'])
 def userInitiallocations():
@@ -22,8 +27,8 @@ def userInitiallocations():
     else :
         return 'Content-Type not supported!'
 
-
-# In this case, the URL route is 'userlocations'.
+# API to get the initial Area Bounds. This will help in representing the Area boundary in the UI (google map implementation)
+# In this case, the URL route is 'areabounds'.
 @application.route('/areabounds', methods = ['GET','POST'])
 def areabounds():
     # Obtain the CSV data.
@@ -32,6 +37,8 @@ def areabounds():
     # Forward the data to the source that called this API.
     return jsonify(l)
 
+# API to get the initial taxi locations. This will help in representing all the taxis in the service area at the start of the simulation.
+# In this case, the URL route is '/taxiInitiallocations'
 @application.route('/taxiInitiallocations', methods = ['GET','POST'])
 def taxiInitialLocations():
     # Obtain the CSV data.
@@ -47,6 +54,9 @@ def taxiInitialLocations():
     else :
         return 'Content-Type not supported!'
 
+# API to get the current taxi locations. This method will help in plotting the taxi route on the Google Map
+# Input - Taxi_reg_no and City name,Output - Taxi Current Location co-ordinates
+# In this case, the URL route is '/taxiCurrentLocations'
 @application.route('/taxiCurrentLocations/', methods = ['GET','POST'])
 def taxiCurrentLocations():
     sim = TaxiSimulator()

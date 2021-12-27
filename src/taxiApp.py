@@ -1,3 +1,6 @@
+'''
+This file serves as the backend for the Taxi Application which primarily serves all the user requests.
+'''
 from flask_cors import CORS
 from flask import Flask, request, jsonify
 
@@ -9,6 +12,9 @@ from Trip import Trip
 
 application = Flask(__name__)
 CORS(application)
+
+# API implementation for a user to request for taxi.
+# Takes the username, TaxiType as input and returns the list of nearest Taxis by querying the taxi collection basing on the proximity, taxi type, and taxi availability
 @application.route('/requestTaxi', methods = ['GET','POST'])
 def requestTaxi():
     #user1Location = Location("POINT", 10.12, 10.15)
@@ -31,7 +37,7 @@ def requestTaxi():
     else :
         return 'Content-Type not supported!'
 
-
+# Provides a mechanism for user to select a taxi from the list of taxis returned in the requestTaxi end point.No validationsin placeat this point of time.
 @application.route('/selectTaxi', methods=['POST', 'GET'])
 def selectTaxi():
     content_type = request.headers.get('Content-Type')
@@ -51,6 +57,8 @@ def selectTaxi():
     else:
         return 'Content-Type not supported!'
 
+# API implementation for starting the trip. Expects the user to send username,taxiname and driver name. And in the backend sets the onTrip status of user and driver to True and changes the taxi vacancy status to booked.
+# Also triggers a notification to user and Driver to let them know about the trip start
 @application.route('/startTrip', methods=['POST', 'GET'])
 def startTrip():
     content_type = request.headers.get('Content-Type')
@@ -69,6 +77,7 @@ def startTrip():
     else:
         return 'Content-Type not supported!'
 
+# API implementatino for end of the trip. Resets the user,driver and taxi status to represent they are not on trip and the updates the taxi and users co-ordinates as per destination co-ordinates. Also can be extended to send trip end notifications.
 @application.route('/endTrip', methods=['POST', 'GET'])
 def endTrip():
     content_type = request.headers.get('Content-Type')
@@ -85,11 +94,6 @@ def endTrip():
     else:
         return 'Content-Type not supported!'
 
-
-
-@application.route('/getTaxiCoords', methods=['POST', 'GET'])
-def getTaxiCoords():
-    return
 
 if __name__ == '__main__':
     application.run(host = 'localhost', debug = True, port = 1113)

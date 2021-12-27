@@ -1,3 +1,6 @@
+'''
+Account information for the taxi trip and handle all trip related actions
+'''
 from database import Database
 from CollectionMap import CollectionMapper
 from sendNotification import SendNotifications

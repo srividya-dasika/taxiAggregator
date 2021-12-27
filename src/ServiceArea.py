@@ -1,3 +1,9 @@
+'''
+Define the service area.
+Service area boundary is defined by the city's geojson polygon
+To extend a service area, download the citys geojson and create a boundary based on the the geojson
+geojson can be downloaded from https://hanshack.com/geotools/gimmegeodata/
+'''
 from database import Database
 
 class ServiceArea:

@@ -1,3 +1,7 @@
+'''
+Dummy files that simulates taxi registration from Admin app
+Used only for testing the app. Not user during production deployment
+'''
 from locationService import Location
 from database import Database
 from CollectionMap import CollectionMapper

@@ -1,3 +1,6 @@
+'''
+End points used to simulate or represent the taxi and user locations in UI via Google Map integration.
+'''
 import time
 
 import pandas as pd

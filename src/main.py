@@ -1,3 +1,6 @@
+'''
+Main used for testing the app by simulating
+'''
 from taxiModel import *
 from userModel import *
 from driverModel import *

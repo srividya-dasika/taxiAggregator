@@ -1,3 +1,7 @@
+'''
+Handle the SNS notifications to driver/user to update booking status
+Config is being read from config file -config.txt
+'''
 from pprint import pprint
 import boto3
 import json

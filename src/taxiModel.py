@@ -1,3 +1,7 @@
+'''
+Modelling the taxi
+Contains all the Classes related to Taxi
+'''
 from database import Database
 # Imports ObjectId to convert to the correct format before querying in the db
 from bson.objectid import ObjectId
@@ -140,7 +144,7 @@ class TaxiModel:
         print(f'Found taxi status count = {status.matched_count}')
         return status.matched_count
 
-
+#The Taxi class represents the Taxi Class as per the collection in DB
 class Taxi:
     proximityRadius = 8000  # assuming proximity factor as 3 kms.
     searchResultLimit = 5  # limit the number of search results
@@ -149,10 +153,12 @@ class Taxi:
         self.reg_no = reg_no
         # self.location = location
         self.taxi_model = TaxiModel()
-
+    
+    
     def add_new_taxi(self, taxi_reg_no, location):  # Adding new user into DB.
         return 1
 
+    #implementation to get the nearest taxi as per the user's location,taxi type preference and proximity.
     def getNearestTaxis(self, username, userLocation, taxi_type):
         #  Send request to book a taxi to the taxi service.
         #  Wait till a taxi is allotted.
@@ -168,18 +174,19 @@ class Taxi:
             print('Error: Either city name is incorrect or user location is not in our service area')
             return -1
 
+    # implementation to update the taxi status
     def updateTaxiStatus(self, city, username, taxi_reg_no, from_status, to_status):
-        ############## Send SNS to taxi
-        ############## Send SNS to User
         status_count =  self.taxi_model.update_booking(city, taxi_reg_no, from_status, to_status)
         if status_count == 0: return -1
         else: return taxi_reg_no
 
+    # implementation to start the trip - send notifications to users and drivers and update the user,driver and taxi status accordingly
     def startTrip(self, city, taxi_reg_no, customer_phone_no,taxi_current_coord,  taxi_dest_coord):
         self.trip_obj = Trip(city, taxi_reg_no, customer_phone_no)
         ############## Send SNS to taxi and user
         return self.trip_obj.start_trip(city, taxi_current_coord,  taxi_dest_coord)
 
+    # implementation to end the trip - send notifications to users and drivers and update the user,driver and taxi status accordingly
     def endTrip(self, trip_id):
         return self.trip_obj.end_trip(trip_id)
 

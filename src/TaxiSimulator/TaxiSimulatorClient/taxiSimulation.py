@@ -1,3 +1,6 @@
+'''
+Obsolete - had been moved outside this package.
+'''
 import time
 
 import pandas as pd
