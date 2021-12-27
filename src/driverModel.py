@@ -1,3 +1,6 @@
+'''
+Models the actions for the taxi driver
+'''
 
 from database import Database
 # Imports ObjectId to convert to the correct format before querying in the db

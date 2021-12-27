@@ -1,3 +1,8 @@
+'''
+Database model for Taxi Aggregator.
+Config is being read from config.txt file.
+'''
+
 # Imports MongoClient for base level access to the local MongoDB
 from pymongo import MongoClient, GEOSPHERE
 

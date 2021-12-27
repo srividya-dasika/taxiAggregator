@@ -1,3 +1,7 @@
+'''
+Handles the management for geojson for use location data for taxis, drivers, users etc
+'''
+
 class Location:
 
 

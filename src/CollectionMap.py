@@ -1,6 +1,10 @@
+'''
+The trip information and the taxi location are segregated into collections base on the service area (city)
+The CollectionMapper returns the appropriate collection based on city
+TODO - Need to read this config from file rather than hard coding as done now.
+'''
+
 from database import Database
-
-
 
 class CollectionMapper:
     def __init__(self, city):
